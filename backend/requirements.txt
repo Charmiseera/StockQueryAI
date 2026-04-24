@@ -4,3 +4,4 @@ openai>=1.0.0
 python-dotenv==1.0.1
 pandas==2.2.2
 httpx>=0.24.0
+mcp>=1.0.0
