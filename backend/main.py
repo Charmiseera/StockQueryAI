@@ -13,13 +13,17 @@ from pathlib import Path
 from openai import OpenAI
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
+import httpx
 
 # ─── Config ──────────────────────────────────────────────────
 load_dotenv(dotenv_path=Path(__file__).parent.parent / '.env')
 
 NEBIUS_API_KEY = os.getenv("NEBIUS_API_KEY", "")
+ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY", "")
+ELEVENLABS_VOICE_ID = os.getenv("ELEVENLABS_VOICE_ID", "")
 DB_PATH = str(Path(__file__).parent.parent / "mcp_server" / "inventory.db")
 MODEL   = "meta-llama/Llama-3.3-70B-Instruct"
 
@@ -52,6 +56,9 @@ app.add_middleware(
 class QueryRequest(BaseModel):
     question: str
 
+class TTSRequest(BaseModel):
+    text: str
+
 class QueryResponse(BaseModel):
     answer: str
     tool_used: str | None
@@ -67,53 +74,101 @@ def _conn() -> sqlite3.Connection:
 def _rows(cursor_rows) -> list[dict]:
     return [dict(r) for r in cursor_rows]
 
-def query_inventory_db(product_name: str) -> list[dict]:
+def search_inventory(
+    name: str = None,
+    category: str = None,
+    max_price: float = None,
+    min_price: float = None,
+    stock_threshold: int = None,
+    sort_by: str = None
+) -> list[dict]:
+    """Search inventory with multiple filters and sorting."""
     conn = _conn()
-    rows = conn.execute(
-        "SELECT * FROM products WHERE name LIKE ? ORDER BY name",
-        (f"%{product_name}%",)
-    ).fetchall()
+    query = "SELECT * FROM products WHERE 1=1"
+    params = []
+
+    if name:
+        query += " AND name LIKE ?"
+        params.append(f"%{name}%")
+    if category:
+        query += " AND category LIKE ?"
+        params.append(f"%{category}%")
+    if max_price is not None:
+        query += " AND price <= ?"
+        params.append(max_price)
+    if min_price is not None:
+        query += " AND price >= ?"
+        params.append(min_price)
+    if stock_threshold is not None:
+        query += " AND stock <= ?"
+        params.append(stock_threshold)
+
+    if sort_by == "price_asc":
+        query += " ORDER BY price ASC"
+    elif sort_by == "price_desc":
+        query += " ORDER BY price DESC"
+    elif sort_by == "stock_asc":
+        query += " ORDER BY stock ASC"
+    elif sort_by == "stock_desc":
+        query += " ORDER BY stock DESC"
+    else:
+        query += " ORDER BY name ASC"
+
+    rows = conn.execute(query, params).fetchall()
+    conn.close()
+    return _rows(rows)
+
+def get_inventory_analytics() -> dict:
+    """Get high-level statistics about the entire inventory."""
+    conn = _conn()
+    stats = conn.execute("""
+        SELECT 
+            COUNT(*) as total_products,
+            SUM(stock) as total_items,
+            ROUND(SUM(price * stock), 2) as total_inventory_value,
+            ROUND(AVG(price), 2) as average_price
+        FROM products
+    """).fetchone()
+    
+    extremes = conn.execute("""
+        SELECT 
+            (SELECT name FROM products ORDER BY price DESC LIMIT 1) as most_expensive,
+            (SELECT name FROM products ORDER BY price ASC LIMIT 1) as cheapest
+    """).fetchone()
+    
+    conn.close()
+    return {**dict(stats), **dict(extremes)}
+
+def get_category_analytics() -> list[dict]:
+    """Get summaries of each product category."""
+    conn = _conn()
+    rows = conn.execute("""
+        SELECT 
+            category, 
+            COUNT(*) as product_count, 
+            SUM(stock) as total_stock,
+            ROUND(AVG(price), 2) as avg_price
+        FROM products 
+        GROUP BY category
+        ORDER BY product_count DESC
+    """).fetchall()
     conn.close()
     return _rows(rows)
 
 def get_product_details(product_id: int) -> dict:
+    """Get full details of a single product."""
     conn = _conn()
     row = conn.execute("SELECT * FROM products WHERE id = ?", (product_id,)).fetchone()
     conn.close()
     return dict(row) if row else {}
 
-def get_low_stock_items(threshold: int = 10) -> list[dict]:
-    conn = _conn()
-    rows = conn.execute(
-        "SELECT * FROM products WHERE stock < ? ORDER BY stock ASC",
-        (threshold,)
-    ).fetchall()
-    conn.close()
-    return _rows(rows)
-
-def get_all_categories() -> list[str]:
-    conn = _conn()
-    rows = conn.execute("SELECT DISTINCT category FROM products ORDER BY category").fetchall()
-    conn.close()
-    return [r["category"] for r in rows]
-
-def get_products_by_category(category: str) -> list[dict]:
-    conn = _conn()
-    rows = conn.execute(
-        "SELECT * FROM products WHERE category LIKE ? ORDER BY name",
-        (category,)
-    ).fetchall()
-    conn.close()
-    return _rows(rows)
-
 
 # ─── Tool Dispatcher ─────────────────────────────────────────
 TOOL_FN_MAP = {
-    "query_inventory_db":    query_inventory_db,
+    "search_inventory":      search_inventory,
+    "get_inventory_analytics": get_inventory_analytics,
+    "get_category_analytics": get_category_analytics,
     "get_product_details":   get_product_details,
-    "get_low_stock_items":   get_low_stock_items,
-    "get_all_categories":    get_all_categories,
-    "get_products_by_category": get_products_by_category,
 }
 
 def execute_tool(name: str, arguments: dict):
@@ -128,15 +183,40 @@ TOOLS = [
     {
         "type": "function",
         "function": {
-            "name": "query_inventory_db",
-            "description": "Search inventory for products whose name contains the given string. Use when user asks about a specific product by name.",
+            "name": "search_inventory",
+            "description": "Search for products with optional filters for name, category, price, and stock levels. Supports sorting.",
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "product_name": {"type": "string", "description": "The product name or partial name to search for."}
+                    "name": {"type": "string", "description": "Filter by product name (partial match)."},
+                    "category": {"type": "string", "description": "Filter by exact category name."},
+                    "max_price": {"type": "number", "description": "Maximum price threshold."},
+                    "min_price": {"type": "number", "description": "Minimum price threshold."},
+                    "stock_threshold": {"type": "integer", "description": "Filter items with stock less than or equal to this value."},
+                    "sort_by": {
+                        "type": "string", 
+                        "enum": ["price_asc", "price_desc", "stock_asc", "stock_desc"],
+                        "description": "Sort results by price or stock."
+                    }
                 },
-                "required": ["product_name"],
+                "required": [],
             },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_inventory_analytics",
+            "description": "Get high-level stats like total inventory value, total item count, average price, and extremes.",
+            "parameters": {"type": "object", "properties": {}},
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_category_analytics",
+            "description": "Get a breakdown of the inventory by category, including counts and average prices.",
+            "parameters": {"type": "object", "properties": {}},
         },
     },
     {
@@ -150,46 +230,6 @@ TOOLS = [
                     "product_id": {"type": "integer", "description": "The numeric product ID."}
                 },
                 "required": ["product_id"],
-            },
-        },
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "get_low_stock_items",
-            "description": "Return all products whose stock is below the given threshold. Use for restocking alerts.",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "threshold": {"type": "integer", "description": "Stock threshold. Default is 10.", "default": 10}
-                },
-                "required": [],
-            },
-        },
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "get_all_categories",
-            "description": "Return a list of all distinct product categories in the inventory.",
-            "parameters": {
-                "type": "object",
-                "properties": {},
-                "required": [],
-            },
-        },
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "get_products_by_category",
-            "description": "Return all products in a specific category. Use when user asks to browse a category.",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "category": {"type": "string", "description": "The category name to filter by."}
-                },
-                "required": ["category"],
             },
         },
     },
@@ -295,3 +335,34 @@ async def query_inventory(request: QueryRequest):
         if "429" in err:
             raise HTTPException(status_code=429, detail="Rate limit reached. Please wait and retry.")
         raise HTTPException(status_code=500, detail=f"Query failed: {err}")
+
+@app.post("/tts")
+async def generate_tts(request: TTSRequest):
+    if not ELEVENLABS_API_KEY or not ELEVENLABS_VOICE_ID:
+        raise HTTPException(status_code=503, detail="ElevenLabs credentials not configured.")
+    
+    url = f"https://api.elevenlabs.io/v1/text-to-speech/{ELEVENLABS_VOICE_ID}/stream"
+    headers = {
+        "Accept": "audio/mpeg",
+        "Content-Type": "application/json",
+        "xi-api-key": ELEVENLABS_API_KEY
+    }
+    data = {
+        "text": request.text,
+        "model_id": "eleven_monolingual_v1",
+        "voice_settings": {
+            "stability": 0.5,
+            "similarity_boost": 0.5
+        }
+    }
+    
+    async def audio_stream():
+        async with httpx.AsyncClient() as client:
+            async with client.stream("POST", url, headers=headers, json=data) as response:
+                if response.status_code != 200:
+                    print(f"[ElevenLabs Error] {response.status_code}")
+                    return
+                async for chunk in response.aiter_bytes():
+                    yield chunk
+
+    return StreamingResponse(audio_stream(), media_type="audio/mpeg")

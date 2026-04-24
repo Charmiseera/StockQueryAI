@@ -842,6 +842,46 @@ code   { font-family: var(--font-mono); }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
+.mic-btn {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-2);
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s var(--ease-spring);
+}
+
+.mic-btn:hover:not(:disabled) {
+  background: var(--bg-hover);
+  color: var(--text-0);
+  border-color: var(--border-mid);
+}
+
+.mic-btn.listening {
+  background: var(--orange-muted);
+  color: var(--orange);
+  border-color: var(--orange-border);
+}
+
+.mic-btn svg { width: 16px; height: 16px; }
+
+.mic-spinner {
+  width: 12px;
+  height: 12px;
+  background: var(--orange);
+  border-radius: 50%;
+  animation: pulse-mic 1s infinite alternate;
+}
+
+@keyframes pulse-mic {
+  from { transform: scale(0.8); opacity: 0.6; }
+  to { transform: scale(1.2); opacity: 1; }
+}
+
 .dock-footer {
   display: flex;
   align-items: center;

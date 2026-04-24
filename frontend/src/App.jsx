@@ -35,14 +35,60 @@ const SendIcon = () => (
   </svg>
 )
 
+const MicIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
+    strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+    <line x1="12" x2="12" y1="19" y2="22" />
+  </svg>
+)
+
 export default function App() {
   const [messages, setMessages]   = useState([])
   const [input, setInput]         = useState('')
   const [loading, setLoading]     = useState(false)
   const [activeNav, setActiveNav] = useState('chat')
   const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [isListening, setIsListening] = useState(false)
   const chatRef  = useRef(null)
   const inputRef = useRef(null)
+
+  const playTTS = async (text) => {
+    try {
+      const response = await axios.post('/tts', { text }, { responseType: 'blob' })
+      const audioUrl = URL.createObjectURL(response.data)
+      const audio = new Audio(audioUrl)
+      audio.play()
+    } catch (err) {
+      console.error("TTS Error:", err)
+    }
+  }
+
+  const startListening = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+    if (!SpeechRecognition) {
+      alert("Your browser does not support Speech Recognition.")
+      return
+    }
+    const recognition = new SpeechRecognition()
+    recognition.lang = 'en-US'
+    recognition.interimResults = false
+    recognition.maxAlternatives = 1
+
+    recognition.onstart = () => setIsListening(true)
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript
+      setInput(transcript)
+      sendMessage(transcript, true)
+    }
+    recognition.onerror = (event) => {
+      console.error("Speech recognition error", event.error)
+      setIsListening(false)
+    }
+    recognition.onend = () => setIsListening(false)
+    recognition.start()
+  }
 
   useEffect(() => {
     if (chatRef.current) {
@@ -50,8 +96,8 @@ export default function App() {
     }
   }, [messages, loading])
 
-  const sendMessage = useCallback(async (questionText) => {
-    const question = (questionText || input).trim()
+  const sendMessage = useCallback(async (questionText, wasVoice = false) => {
+    const question = (typeof questionText === 'string' ? questionText : input).trim()
     if (!question || loading) return
 
     setInput('')
@@ -75,6 +121,9 @@ export default function App() {
         data: data.data,
         timestamp: new Date(),
       }])
+      if (wasVoice === true) {
+        playTTS(data.answer)
+      }
     } catch (err) {
       const detail = err.response?.data?.detail || 'Query failed. Check backend connection.'
       setMessages(prev => [...prev, {
@@ -218,6 +267,14 @@ export default function App() {
             />
             <div className="input-actions">
               <span className="input-hint-key">↵ Enter</span>
+              <button
+                className={`mic-btn ${isListening ? 'listening' : ''}`}
+                onClick={startListening}
+                disabled={loading || isListening}
+                title="Voice Input"
+              >
+                {isListening ? <span className="mic-spinner" /> : <MicIcon />}
+              </button>
               <button
                 className="send-btn"
                 onClick={() => sendMessage()}
