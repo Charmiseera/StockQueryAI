@@ -119,6 +119,7 @@ export default function App() {
         content: data.answer,
         toolUsed: data.tool_used,
         data: data.data,
+        userQuery: question, // Store original question to detect intent
         timestamp: new Date(),
       }])
       if (wasVoice === true) {

@@ -5,7 +5,13 @@ export default function DataTable({ data }) {
 
   // Exclude internal/less useful fields from display
   const exclude = new Set()
-  const columns = Object.keys(data[0]).filter(k => !exclude.has(k))
+  
+  // Normalize data: if it's a list of strings, convert to list of objects
+  const normalizedData = typeof data[0] === 'string' 
+    ? data.map(item => ({ Category: item }))
+    : data;
+
+  const columns = Object.keys(normalizedData[0]).filter(k => !exclude.has(k))
 
   const formatCell = (key, val) => {
     if (key === 'stock') {
@@ -31,7 +37,7 @@ export default function DataTable({ data }) {
           </tr>
         </thead>
         <tbody>
-          {data.map((row, i) => (
+          {normalizedData.map((row, i) => (
             <tr key={i}>
               {columns.map(col => (
                 <td key={col}>{formatCell(col, row[col])}</td>

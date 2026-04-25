@@ -101,20 +101,17 @@ class QueryResponse(BaseModel):
 
 
 SYSTEM_PROMPT = (
-    "You are StockQuery AI, an intelligent inventory assistant backed by a real SQLite database. "
-    "Rules you MUST follow:\n"
-    "1. Always call exactly ONE tool to retrieve data, then immediately write your final answer. "
-    "Do NOT call multiple tools in sequence unless the user explicitly asks for combined data.\n"
-    "2. After receiving tool results, write a SHORT natural-language summary. "
-    "NEVER paste raw JSON, arrays, or code blocks into your answer. "
-    "The frontend renders a table separately — your text answer should be a brief summary only "
-    "(e.g. 'Found 5 electronics products. Here are the details:').\n"
-    "3. If a tool returns an empty list [], say: 'No products found matching your criteria.'\n"
-    "4. Include key facts (name, price, stock) in your summary when listing products.\n"
-    "5. Never guess or hallucinate product data.\n"
-    "6. For analytics or statistics questions (total value, total stock, averages, category breakdown), "
-    "you MUST call the appropriate analytics tool. "
-    "If you see tools like get_inventory_analytics or get_category_analytics, use them for stats."
+    "You are StockQuery AI, an intelligent inventory assistant. "
+    "You have tools to both READ and WRITE to a real SQLite database.\n\n"
+    "CRITICAL RULES:\n"
+    "1. ANALYTICS & GRAPHS: If a user asks for a 'graph', 'chart', 'visual', 'summary', or 'breakdown' of the WHOLE inventory or per CATEGORY, "
+    "you MUST use 'get_inventory_analytics' or 'get_category_analytics'. Do NOT say you lack details.\n"
+    "2. OPTIONAL PARAMS: In tools like 'search_inventory', all parameters (min_price, max_price, etc.) are OPTIONAL. "
+    "To show the most expensive items, just call 'search_inventory(sort_by=\"price_desc\")' and leave other fields null.\n"
+    "3. WRITE (Update Stock): To update stock, you MUST use 'update_stock'. If you don't have the ID, search for it FIRST.\n"
+    "4. MULTI-STEP: You are encouraged to call multiple tools in sequence without stopping (e.g., Search -> Update -> Analytics).\n"
+    "5. RESPONSES: Provide a natural-language summary. Never paste raw JSON. If a list is empty, say 'No products found'.\n"
+    "6. NO HALLUCINATION: Only use results from your tools. Never guess IDs."
 )
 
 
@@ -152,45 +149,6 @@ async def run_query(question: str) -> QueryResponse:
         log.info(f"[LLM] Turn {turn + 1}/{max_turns} — calling model")
         response = await loop.run_in_executor(None, _llm_call)
         msg      = response.choices[0].message
-
-        # ── No tool call on this turn ────────────────────────────
-        if not msg.tool_calls and turn == 0 and tool_used is None:
-            # Fallback/Forced tool logic for analytics (optional but kept for robustness)
-            q_lower = question.lower()
-            forced_tool = None
-            forced_args = {}
-
-            if any(kw in q_lower for kw in ("category", "breakdown", "per category")):
-                forced_tool = "get_category_analytics"
-            elif any(kw in q_lower for kw in ("total", "value", "worth", "statistic", "analytic", "summary")):
-                forced_tool = "get_inventory_analytics"
-
-            if forced_tool and any(t["function"]["name"] == forced_tool for t in tools):
-                log.info(f"[LLM] Model skipped tool on turn 1 — forcing '{forced_tool}'")
-                forced_result = await mcp_manager.call_tool(forced_tool, forced_args)
-                tool_used   = forced_tool
-                data_result = [forced_result] if isinstance(forced_result, dict) else forced_result
-
-                import uuid
-                fake_id = f"forced_{uuid.uuid4().hex[:8]}"
-                messages.append({
-                    "role": "assistant",
-                    "content": None,
-                    "tool_calls": [{
-                        "id": fake_id,
-                        "type": "function",
-                        "function": {
-                            "name": forced_tool,
-                            "arguments": "{}",
-                        },
-                    }],
-                })
-                messages.append({
-                    "role": "tool",
-                    "tool_call_id": fake_id,
-                    "content": json.dumps(forced_result, default=str),
-                })
-                continue
 
         # Final answer
         if not msg.tool_calls:

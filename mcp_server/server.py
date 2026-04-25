@@ -9,6 +9,7 @@ or stdio (for Claude Desktop) when MCP_TRANSPORT=stdio.
 import sqlite3
 import os
 import logging
+from typing import Optional
 
 from mcp.server.fastmcp import FastMCP
 
@@ -94,12 +95,12 @@ def get_product_details(product_id: int) -> dict:
 # ─────────────────────────────────────────────────────────────
 @mcp.tool()
 def search_inventory(
-    name: str = None,
-    category: str = None,
-    max_price: float = None,
-    min_price: float = None,
-    stock_threshold: int = None,
-    sort_by: str = None,
+    name: Optional[str] = None,
+    category: Optional[str] = None,
+    max_price: Optional[float] = None,
+    min_price: Optional[float] = None,
+    stock_threshold: Optional[int] = None,
+    sort_by: Optional[str] = None,
 ) -> list[dict]:
     """
     Search products with optional filters and sorting.
@@ -202,7 +203,7 @@ def get_products_by_category(category: str) -> list[dict]:
     conn = _get_conn()
     rows = conn.execute(
         "SELECT * FROM products WHERE category LIKE ? ORDER BY name",
-        (category,),
+        (f"%{category}%",),
     ).fetchall()
     conn.close()
     result = _rows(rows)
@@ -271,8 +272,40 @@ def get_category_analytics() -> list[dict]:
 
 
 # ─────────────────────────────────────────────────────────────
-# Entry point
+# Tool 9: Update product stock level (Write Capability)
 # ─────────────────────────────────────────────────────────────
+@mcp.tool()
+def update_stock(product_id: int, new_quantity: int) -> dict:
+    """
+    Update the stock level for a specific product by its numeric ID.
+    Use this when the user mentions receiving a shipment, selling items, 
+    or correcting stock levels.
+    """
+    log.info(f"[DB] update_stock | id={product_id} new_qty={new_quantity}")
+    conn = _get_conn()
+    
+    # First, verify the product exists
+    check = conn.execute("SELECT name, stock FROM products WHERE id = ?", (product_id,)).fetchone()
+    if not check:
+        conn.close()
+        log.warning(f"[DB] update_stock | product id={product_id} not found")
+        return {"error": f"Product with ID {product_id} not found."}
+
+    # Perform update
+    conn.execute(
+        "UPDATE products SET stock = ? WHERE id = ?",
+        (new_quantity, product_id)
+    )
+    conn.commit()
+    conn.close()
+    
+    log.info(f"[DB] update_stock | SUCCESS: '{check['name']}' is now {new_quantity}")
+    return {
+        "success": True,
+        "message": f"Updated '{check['name']}' stock to {new_quantity}.",
+        "product_id": product_id,
+        "new_stock": new_quantity
+    }
 if __name__ == "__main__":
     transport = os.getenv("MCP_TRANSPORT", "http")
     if transport == "stdio":
