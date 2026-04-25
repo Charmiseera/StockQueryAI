@@ -9,19 +9,19 @@ const NAV_ITEMS = [
 ]
 
 const CATEGORY_QUERIES = {
+  'Fruits & Veg':  'Show me all Fruits & Vegetables',
   'Dairy':         'Show me all Dairy products',
-  'Electronics':   'Show me all Electronics products',
-  'Grains':        'Show me all Grains products',
-  'Personal Care': 'Show me all Personal Care products',
-  'Snacks':        'Show me all Snacks products',
+  'Grains & Pulses':'Show me all Grains & Pulses',
+  'Seafood':       'Show me all Seafood',
+  'Beverages':     'Show me all Beverages',
 }
 
 const CATEGORY_COLORS = {
+  'Fruits & Veg':  '#39ff14',
   'Dairy':         '#00ff88',
-  'Electronics':   '#ff6b2b',
-  'Grains':        '#ffd700',
-  'Personal Care': '#00d4ff',
-  'Snacks':        '#ff4488',
+  'Grains & Pulses':'#ffd700',
+  'Seafood':       '#00d4ff',
+  'Beverages':     '#ff4488',
 }
 
 export default function Sidebar({ activeNav, setActiveNav, onQuery, sidebarOpen, messageCount }) {
@@ -104,7 +104,7 @@ export default function Sidebar({ activeNav, setActiveNav, onQuery, sidebarOpen,
             <span className="action-icon warning">!</span>
             Low Stock Alert
           </button>
-          <button className="action-btn" onClick={() => onQuery('List all categories')}>
+          <button className="action-btn" onClick={() => onQuery('Please show me a list of all product categories available in the database')}>
             <span className="action-icon info">≡</span>
             All Categories
           </button>
@@ -125,7 +125,7 @@ export default function Sidebar({ activeNav, setActiveNav, onQuery, sidebarOpen,
         </div>
         <div className="db-info">
           <span className="db-icon">◉</span>
-          inventory.db · 25 products
+          inventory.db · 990 products
         </div>
       </div>
     </aside>
