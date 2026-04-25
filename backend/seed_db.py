@@ -72,10 +72,10 @@ def load_from_csv(conn: sqlite3.Connection, csv_path: str) -> int:
     """
     col_map = {
         'name':     ['product_name', 'name', 'item_name', 'product', 'item', 'description'],
-        'category': ['category', 'category_name', 'type', 'department', 'section'],
+        'category': ['category', 'catagory', 'category_name', 'type', 'department', 'section'],
         'stock':    ['stock', 'quantity', 'stock_quantity', 'qty', 'units', 'inventory'],
         'price':    ['price', 'unit_price', 'selling_price', 'mrp', 'cost'],
-        'supplier': ['supplier', 'vendor', 'brand', 'manufacturer', 'source'],
+        'supplier': ['supplier', 'supplier_name', 'vendor', 'brand', 'manufacturer', 'source'],
     }
 
     with open(csv_path, newline='', encoding='utf-8') as f:
@@ -101,7 +101,9 @@ def load_from_csv(conn: sqlite3.Connection, csv_path: str) -> int:
                 name     = str(lower_row.get(resolved.get('name', ''), '')).strip()[:200]
                 category = str(lower_row.get(resolved.get('category', ''), 'General')).strip()[:100] or 'General'
                 stock    = int(float(lower_row.get(resolved.get('stock', ''), 0) or 0))
-                price    = float(lower_row.get(resolved.get('price', ''), 0.0) or 0.0)
+                
+                raw_price = str(lower_row.get(resolved.get('price', ''), '0.0')).replace('$', '').replace(',', '').strip()
+                price    = float(raw_price or 0.0)
                 supplier = str(lower_row.get(resolved.get('supplier', ''), 'Unknown')).strip()[:100] or 'Unknown'
 
                 if not name:
