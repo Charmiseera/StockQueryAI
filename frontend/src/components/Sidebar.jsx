@@ -4,7 +4,6 @@ import axios from 'axios'
 
 const NAV_ITEMS = [
   { id: 'chat',    label: 'Chat',    icon: '◈' },
-  { id: 'explore', label: 'Explore', icon: '◎' },
   { id: 'history', label: 'History', icon: '◷' },
 ]
 
