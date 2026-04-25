@@ -249,12 +249,12 @@ async def run_query(question: str) -> QueryResponse:
     client = get_client()
     messages = [
         {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user",   "content": [{"type": "text", "text": question}]},
+        {"role": "user",   "content": question},
     ]
 
     tool_used   = None
     data_result = None
-    max_turns   = 5  # Safety cap on tool call rounds
+    max_turns   = 10  # Increased for stability
 
     def _llm_call():
         return client.chat.completions.create(
@@ -279,8 +279,11 @@ async def run_query(question: str) -> QueryResponse:
                 data=data_result if isinstance(data_result, list) else None,
             )
 
-        # Append assistant message with tool calls
-        messages.append(msg)
+        # Ensure assistant message has content string (some providers dislike None)
+        msg_dict = msg.model_dump()
+        if msg_dict.get("content") is None:
+            msg_dict["content"] = ""
+        messages.append(msg_dict)
 
         # Execute each tool call
         for tc in msg.tool_calls:
