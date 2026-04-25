@@ -195,9 +195,33 @@ export default function App() {
           </div>
         </header>
 
-        {/* ── Chat Area ── */}
         <main className="chat-area" ref={chatRef}>
-          {!hasMessages ? (
+          {activeNav === 'history' ? (
+            <div className="history-view" style={{ padding: '2rem' }}>
+              <h2 style={{ color: '#fff', marginBottom: '1rem', borderBottom: '1px solid #333', paddingBottom: '0.5rem' }}>Session History</h2>
+              {messages.filter(m => m.role === 'user').length === 0 ? (
+                <p style={{ color: '#888' }}>No queries have been made in this session yet.</p>
+              ) : (
+                <ul style={{ listStyle: 'none', padding: 0 }}>
+                  {messages.filter(m => m.role === 'user').map(m => (
+                    <li 
+                      key={m.id} 
+                      className="history-item"
+                      style={{ padding: '1rem', borderBottom: '1px solid #222', color: '#00ff88', cursor: 'pointer', transition: 'background 0.2s' }} 
+                      onClick={() => { setActiveNav('chat'); setInput(m.content); setTimeout(() => inputRef.current?.focus(), 50); }}
+                      onMouseOver={(e) => e.currentTarget.style.background = '#111'}
+                      onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                    >
+                      <span style={{ fontSize: '1.1rem' }}>{m.content}</span>
+                      <span style={{ color: '#666', fontSize: '0.85rem', marginLeft: '15px', float: 'right' }}>
+                        {new Date(m.timestamp).toLocaleTimeString()}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ) : !hasMessages ? (
             <div className="welcome">
               <div className="welcome-header">
                 <div className="welcome-tag">INVENTORY INTELLIGENCE</div>
@@ -228,12 +252,12 @@ export default function App() {
 
               <div className="welcome-stats">
                 <div className="wstat">
-                  <span className="wstat-num">25</span>
+                  <span className="wstat-num">990</span>
                   <span className="wstat-label">Products</span>
                 </div>
                 <div className="wstat-div" />
                 <div className="wstat">
-                  <span className="wstat-num">5</span>
+                  <span className="wstat-num">7</span>
                   <span className="wstat-label">Categories</span>
                 </div>
                 <div className="wstat-div" />
