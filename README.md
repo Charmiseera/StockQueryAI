@@ -1,9 +1,5 @@
 
 
-StockQuery AI: Premium Documentation
-I've integrated the images I generated and organized the information in an academic and professional structure suitable for a high-end project report.
-
-markdown
 # 📦 StockQuery AI — Intelligent Inventory Intelligence Agent
 StockQuery AI is a next-generation inventory management assistant that transforms how businesses interact with their data. By leveraging **Large Language Models (LLMs)** and the **Model Context Protocol (MCP)**, it allows users to manage stock, track categories, and receive intelligent insights using plain English — no SQL knowledge required.
 ---
