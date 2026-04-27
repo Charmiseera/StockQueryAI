@@ -1,6 +1,6 @@
 // Sidebar.jsx — Navigation panel with stats and quick-access categories
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import api from '../services/api'
 
 const NAV_ITEMS = [
   { id: 'chat',    label: 'Chat',    icon: '◈' },
@@ -8,26 +8,30 @@ const NAV_ITEMS = [
 ]
 
 const CATEGORY_QUERIES = {
-  'Fruits & Veg':  'Show me all Fruits & Vegetables',
-  'Dairy':         'Show me all Dairy products',
-  'Grains & Pulses':'Show me all Grains & Pulses',
-  'Seafood':       'Show me all Seafood',
-  'Beverages':     'Show me all Beverages',
+  'Fruits & Veg':    'Show me all Fruits & Vegetables',
+  'Dairy':           'Show me all Dairy products',
+  'Grains & Pulses': 'Show me all Grains & Pulses',
+  'Seafood':         'Show me all Seafood',
+  'Beverages':       'Show me all Beverages',
+  'Bakery':          'Show me all Bakery products',
+  'Oils & Fats':     'Show me all Oils & Fats',
 }
 
 const CATEGORY_COLORS = {
-  'Fruits & Veg':  '#39ff14',
-  'Dairy':         '#00ff88',
-  'Grains & Pulses':'#ffd700',
-  'Seafood':       '#00d4ff',
-  'Beverages':     '#ff4488',
+  'Fruits & Veg':    '#39ff14',
+  'Dairy':           '#00ff88',
+  'Grains & Pulses': '#ffd700',
+  'Seafood':         '#00d4ff',
+  'Beverages':       '#ff4488',
+  'Bakery':          '#ff9944',
+  'Oils & Fats':     '#cc88ff',
 }
 
-export default function Sidebar({ activeNav, setActiveNav, onQuery, sidebarOpen, messageCount }) {
+export default function Sidebar({ activeNav, setActiveNav, onQuery, sidebarOpen, messageCount, userEmail, onLogout }) {
   const [health, setHealth] = useState(null)
 
   useEffect(() => {
-    axios.get('/health')
+    api.get('/health')
       .then(r => setHealth(r.data))
       .catch(() => setHealth(null))
   }, [])
@@ -36,7 +40,6 @@ export default function Sidebar({ activeNav, setActiveNav, onQuery, sidebarOpen,
 
   return (
     <aside className="sidebar">
-
       {/* ── Brand ── */}
       <div className="sidebar-brand">
         <div className="brand-icon">
@@ -82,10 +85,7 @@ export default function Sidebar({ activeNav, setActiveNav, onQuery, sidebarOpen,
               onClick={() => onQuery(query)}
               title={`Browse ${cat}`}
             >
-              <span
-                className="cat-dot"
-                style={{ background: CATEGORY_COLORS[cat] }}
-              />
+              <span className="cat-dot" style={{ background: CATEGORY_COLORS[cat] }} />
               <span className="cat-name">{cat}</span>
               <span className="cat-arrow">→</span>
             </button>
@@ -116,11 +116,18 @@ export default function Sidebar({ activeNav, setActiveNav, onQuery, sidebarOpen,
 
       {/* ── Status Footer ── */}
       <div className="sidebar-footer">
+        {userEmail && (
+          <div className="sidebar-user">
+            <div className="sidebar-user-avatar">{userEmail[0].toUpperCase()}</div>
+            <div className="sidebar-user-info">
+              <div className="sidebar-user-email">{userEmail}</div>
+              <button className="sidebar-logout" onClick={onLogout}>Sign out</button>
+            </div>
+          </div>
+        )}
         <div className="status-row">
           <span className={`status-indicator ${health ? 'online' : 'offline'}`} />
-          <span className="status-text">
-            {health ? 'API Connected' : 'API Offline'}
-          </span>
+          <span className="status-text">{health ? 'API Connected' : 'API Offline'}</span>
         </div>
         <div className="db-info">
           <span className="db-icon">◉</span>
