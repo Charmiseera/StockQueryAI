@@ -57,7 +57,7 @@ def query_inventory_db(product_name: str) -> list[dict]:
     log.info(f"[DB] query_inventory_db | name LIKE '%{product_name}%'")
     conn = _get_conn()
     rows = conn.execute(
-        "SELECT * FROM products WHERE name LIKE ? ORDER BY name",
+        "SELECT * FROM products WHERE name LIKE ? ORDER BY name LIMIT 50",
         (f"%{product_name}%",),
     ).fetchall()
     conn.close()
@@ -141,7 +141,7 @@ def search_inventory(
         "stock_asc":  "ORDER BY stock ASC",
         "stock_desc": "ORDER BY stock DESC",
     }
-    query += f" {sort_map.get(sort_by, 'ORDER BY name ASC')}"
+    query += f" {sort_map.get(sort_by, 'ORDER BY name ASC')} LIMIT 50"
 
     rows = conn.execute(query, params).fetchall()
     conn.close()
@@ -154,15 +154,15 @@ def search_inventory(
 # Tool 4: Low-stock alert
 # ─────────────────────────────────────────────────────────────
 @mcp.tool()
-def get_low_stock_items(threshold: int = 10) -> list[dict]:
+def get_low_stock_items(threshold: int = 20) -> list[dict]:
     """
     Return all products whose current stock is below the given threshold.
-    Default threshold is 10 units. Ordered by stock ascending.
+    Default threshold is 20 units (suitable for this dataset where stock ranges 10-100). Ordered by stock ascending.
     """
     log.info(f"[DB] get_low_stock_items | stock < {threshold}")
     conn = _get_conn()
     rows = conn.execute(
-        "SELECT * FROM products WHERE stock < ? ORDER BY stock ASC",
+        "SELECT * FROM products WHERE stock < ? ORDER BY stock ASC LIMIT 50",
         (threshold,),
     ).fetchall()
     conn.close()
@@ -202,7 +202,7 @@ def get_products_by_category(category: str) -> list[dict]:
     log.info(f"[DB] get_products_by_category | category='{category}'")
     conn = _get_conn()
     rows = conn.execute(
-        "SELECT * FROM products WHERE category LIKE ? ORDER BY name",
+        "SELECT * FROM products WHERE category LIKE ? ORDER BY name LIMIT 50",
         (f"%{category}%",),
     ).fetchall()
     conn.close()
@@ -306,6 +306,153 @@ def update_stock(product_id: int, new_quantity: int) -> dict:
         "product_id": product_id,
         "new_stock": new_quantity
     }
+
+# ─────────────────────────────────────────────────────────────
+# DB init: ensure users + history tables exist
+# ─────────────────────────────────────────────────────────────
+def _init_auth_tables():
+    conn = _get_conn()
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id                 INTEGER PRIMARY KEY AUTOINCREMENT,
+            email              TEXT    UNIQUE NOT NULL,
+            password_hash      TEXT    NOT NULL,
+            is_verified        INTEGER NOT NULL DEFAULT 0,
+            verification_token TEXT,
+            reset_token        TEXT,
+            reset_token_expiry TEXT,
+            created_at         TEXT    DEFAULT (datetime('now'))
+        )
+    """)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS query_history (
+            id        INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id   INTEGER NOT NULL,
+            question  TEXT    NOT NULL,
+            answer    TEXT    NOT NULL,
+            tool_used TEXT,
+            timestamp TEXT    DEFAULT (datetime('now')),
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+_init_auth_tables()
+
+# ─────────────────────────────────────────────────────────────
+# User Auth Tools
+# ─────────────────────────────────────────────────────────────
+@mcp.tool()
+def register_user(email: str, password_hash: str, verification_token: str) -> dict:
+    """Register a new user with a hashed password and verification token."""
+    conn = _get_conn()
+    try:
+        conn.execute(
+            "INSERT INTO users (email, password_hash, verification_token) VALUES (?, ?, ?)",
+            (email, password_hash, verification_token)
+        )
+        conn.commit()
+        row = conn.execute("SELECT id, email, is_verified FROM users WHERE email = ?", (email,)).fetchone()
+        return dict(row)
+    except Exception as e:
+        return {"error": str(e)}
+    finally:
+        conn.close()
+
+@mcp.tool()
+def get_user_by_email(email: str) -> dict:
+    """Retrieve a user record by email."""
+    conn = _get_conn()
+    row = conn.execute("SELECT * FROM users WHERE email = ?", (email,)).fetchone()
+    conn.close()
+    return dict(row) if row else {"error": "User not found"}
+
+@mcp.tool()
+def verify_user_email(token: str) -> dict:
+    """Mark user as verified using their verification token."""
+    conn = _get_conn()
+    row = conn.execute("SELECT id FROM users WHERE verification_token = ?", (token,)).fetchone()
+    if not row:
+        conn.close()
+        return {"error": "Invalid or expired verification token"}
+    conn.execute(
+        "UPDATE users SET is_verified = 1, verification_token = NULL WHERE id = ?",
+        (row["id"],)
+    )
+    conn.commit()
+    conn.close()
+    return {"success": True, "user_id": row["id"]}
+
+@mcp.tool()
+def set_reset_token(email: str, token: str, expiry: str) -> dict:
+    """Store a password reset token for a user."""
+    conn = _get_conn()
+    row = conn.execute("SELECT id FROM users WHERE email = ?", (email,)).fetchone()
+    if not row:
+        conn.close()
+        return {"error": "User not found"}
+    conn.execute(
+        "UPDATE users SET reset_token = ?, reset_token_expiry = ? WHERE email = ?",
+        (token, expiry, email)
+    )
+    conn.commit()
+    conn.close()
+    return {"success": True}
+
+@mcp.tool()
+def reset_user_password(token: str, new_password_hash: str) -> dict:
+    """Reset user password if token is valid and not expired."""
+    conn = _get_conn()
+    row = conn.execute(
+        "SELECT id, reset_token_expiry FROM users WHERE reset_token = ?", (token,)
+    ).fetchone()
+    if not row:
+        conn.close()
+        return {"error": "Invalid reset token"}
+    conn.execute(
+        "UPDATE users SET password_hash = ?, reset_token = NULL, reset_token_expiry = NULL WHERE id = ?",
+        (new_password_hash, row["id"])
+    )
+    conn.commit()
+    conn.close()
+    return {"success": True}
+
+@mcp.tool()
+def get_all_users() -> list[dict]:
+    """Return all registered users (id, email, is_verified)."""
+    conn = _get_conn()
+    rows = conn.execute("SELECT id, email, is_verified, created_at FROM users").fetchall()
+    conn.close()
+    return _rows(rows)
+
+# ─────────────────────────────────────────────────────────────
+# Query History Tools
+# ─────────────────────────────────────────────────────────────
+@mcp.tool()
+def save_query_history(user_id: int, question: str, answer: str, tool_used: Optional[str] = None) -> dict:
+    """Save a user's query and AI response to history."""
+    conn = _get_conn()
+    conn.execute(
+        "INSERT INTO query_history (user_id, question, answer, tool_used) VALUES (?, ?, ?, ?)",
+        (user_id, question, answer, tool_used)
+    )
+    conn.commit()
+    conn.close()
+    return {"success": True}
+
+@mcp.tool()
+def get_query_history(user_id: int) -> list[dict]:
+    """Retrieve the last 50 queries for a given user."""
+    conn = _get_conn()
+    rows = conn.execute(
+        "SELECT * FROM query_history WHERE user_id = ? ORDER BY timestamp DESC LIMIT 50",
+        (user_id,)
+    ).fetchall()
+    conn.close()
+    return _rows(rows)
+
+
 if __name__ == "__main__":
     transport = os.getenv("MCP_TRANSPORT", "http")
     if transport == "stdio":
@@ -314,3 +461,4 @@ if __name__ == "__main__":
     else:
         log.info(f"Starting MCP server — streamable-http on {MCP_HOST}:{MCP_PORT}/mcp")
         mcp.run(transport="streamable-http")
+
