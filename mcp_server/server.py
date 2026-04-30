@@ -212,6 +212,34 @@ def get_products_by_category(category: str) -> list[dict]:
 
 
 # ─────────────────────────────────────────────────────────────
+# Tool 6.5: Products by a list of exact or partial names
+# ─────────────────────────────────────────────────────────────
+@mcp.tool()
+def get_products_by_names(names: list[str]) -> list[dict]:
+    """
+    Retrieve products that match any of the names in the provided list.
+    Use this when you need to fetch semantic subsets (e.g., 'only fruits' or 'only vegetables')
+    from a combined category by providing a list of all known fruit/vegetable names.
+    """
+    log.info(f"[DB] get_products_by_names | names={names}")
+    if not names:
+        return []
+    
+    conn = _get_conn()
+    # Create a query with multiple LIKE clauses
+    conditions = " OR ".join(["name LIKE ?"] * len(names))
+    query = f"SELECT * FROM products WHERE {conditions} ORDER BY name"
+    params = [f"%{name}%" for name in names]
+    
+    rows = conn.execute(query, params).fetchall()
+    conn.close()
+    
+    result = _rows(rows)
+    log.info(f"[DB] get_products_by_names | {len(result)} product(s)")
+    return result
+
+
+# ─────────────────────────────────────────────────────────────
 # Tool 7: Inventory analytics (totals + extremes)
 # ─────────────────────────────────────────────────────────────
 @mcp.tool()
@@ -275,35 +303,65 @@ def get_category_analytics() -> list[dict]:
 # Tool 9: Update product stock level (Write Capability)
 # ─────────────────────────────────────────────────────────────
 @mcp.tool()
-def update_stock(product_id: int, new_quantity: int) -> dict:
+def update_stock(new_quantity: int, product_id: Optional[int] = None, product_name: Optional[str] = None, supplier: Optional[str] = None) -> dict:
     """
-    Update the stock level for a specific product by its numeric ID.
-    Use this when the user mentions receiving a shipment, selling items, 
-    or correcting stock levels.
+    Update the stock level for a product.
+    You can provide either the numeric product_id OR the product_name (and optionally supplier to narrow it down).
+    Use this when the user mentions receiving a shipment, selling items, or correcting stock levels.
     """
-    log.info(f"[DB] update_stock | id={product_id} new_qty={new_quantity}")
+    log.info(f"[DB] update_stock | id={product_id} name={product_name} new_qty={new_quantity}")
     conn = _get_conn()
     
-    # First, verify the product exists
-    check = conn.execute("SELECT name, stock FROM products WHERE id = ?", (product_id,)).fetchone()
-    if not check:
+    target_id = None
+    target_name = None
+    
+    if product_id is not None:
+        check = conn.execute("SELECT id, name, stock FROM products WHERE id = ?", (product_id,)).fetchone()
+        if not check:
+            conn.close()
+            log.warning(f"[DB] update_stock | product id={product_id} not found")
+            return {"error": f"Product with ID {product_id} not found."}
+        target_id = check["id"]
+        target_name = check["name"]
+    elif product_name is not None:
+        query = "SELECT id, name, stock FROM products WHERE name LIKE ?"
+        params = [f"%{product_name}%"]
+        if supplier:
+            query += " AND supplier LIKE ?"
+            params.append(f"%{supplier}%")
+            
+        matches = conn.execute(query, params).fetchall()
+        
+        if len(matches) == 0:
+            conn.close()
+            return {"error": f"No products found matching name '{product_name}'."}
+        elif len(matches) > 1:
+            conn.close()
+            # If multiple exist, ask LLM to be more specific
+            return {
+                "error": f"Multiple products match '{product_name}'. Please be more specific or provide a supplier.",
+                "matches": _rows(matches)
+            }
+        
+        target_id = matches[0]["id"]
+        target_name = matches[0]["name"]
+    else:
         conn.close()
-        log.warning(f"[DB] update_stock | product id={product_id} not found")
-        return {"error": f"Product with ID {product_id} not found."}
+        return {"error": "You must provide either product_id or product_name."}
 
     # Perform update
     conn.execute(
         "UPDATE products SET stock = ? WHERE id = ?",
-        (new_quantity, product_id)
+        (new_quantity, target_id)
     )
     conn.commit()
     conn.close()
     
-    log.info(f"[DB] update_stock | SUCCESS: '{check['name']}' is now {new_quantity}")
+    log.info(f"[DB] update_stock | SUCCESS: '{target_name}' is now {new_quantity}")
     return {
         "success": True,
-        "message": f"Updated '{check['name']}' stock to {new_quantity}.",
-        "product_id": product_id,
+        "message": f"Updated '{target_name}' stock to {new_quantity}.",
+        "product_id": target_id,
         "new_stock": new_quantity
     }
 if __name__ == "__main__":

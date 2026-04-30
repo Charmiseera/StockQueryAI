@@ -23,12 +23,12 @@ export default function MessageBubble({ message }) {
         </div>
         <div className="msg-meta">
           <span className="msg-time">{formatTime(timestamp)}</span>
-          {toolUsed && (
-            <span className="tool-tag">
+          {toolUsed && toolUsed.split(',').map((tool, idx) => (
+            <span key={idx} className="tool-tag">
               <span className="tool-tag-dot" />
-              {toolUsed}()
+              {tool.trim()}()
             </span>
-          )}
+          ))}
         </div>
       </div>
     </div>

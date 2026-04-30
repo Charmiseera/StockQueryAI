@@ -1,0 +1,1001 @@
+name,category,stock,price,supplier
+Home & Kitchen Eco Product 28,Home & Kitchen,413,171.23,StyleInc
+Home & Kitchen Elite Gadget 21,Home & Kitchen,413,130.36,FitGear
+Clothing Super Accessory 11,Clothing,192,166.04,StyleInc
+Clothing Super Accessory 63,Clothing,381,142.12,FitGear
+Grocery Smart Widget 31,Grocery,278,158.17,FitGear
+Electronics Basic Kit 82,Electronics,300,74.22,StyleInc
+Clothing Basic Pack 55,Clothing,101,297.29,TechCorp
+Clothing Basic Kit 18,Clothing,130,244.5,StyleInc
+Electronics Classic Gadget 90,Electronics,273,194.79,FitGear
+Sports Pro Accessory 75,Sports,475,484.5,FreshFarms
+Clothing Elite Accessory 33,Clothing,377,477.37,HomeGoods LLC
+Grocery Super Kit 56,Grocery,458,345.06,FreshFarms
+Clothing Ultra Pack 20,Clothing,275,111.92,TechCorp
+Sports Max Gadget 95,Sports,128,413.97,HomeGoods LLC
+Electronics Basic Device 23,Electronics,353,301.48,HomeGoods LLC
+Grocery Ultra Product 98,Grocery,402,179.65,HomeGoods LLC
+Home & Kitchen Pro Widget 61,Home & Kitchen,443,53.22,TechCorp
+Electronics Super Item 69,Electronics,489,276.09,FreshFarms
+Home & Kitchen Eco Bundle 92,Home & Kitchen,376,242.23,StyleInc
+Grocery Classic Tool 26,Grocery,360,16.3,TechCorp
+Grocery Smart Bundle 40,Grocery,147,422.94,HomeGoods LLC
+Sports Eco Device 51,Sports,389,450.67,FreshFarms
+Home & Kitchen Classic Kit 86,Home & Kitchen,390,270.75,FitGear
+Grocery Elite Accessory 22,Grocery,464,89.25,TechCorp
+Electronics Ultra Kit 51,Electronics,86,75.37,StyleInc
+Grocery Basic Device 65,Grocery,427,39.85,HomeGoods LLC
+Electronics Max Pack 93,Electronics,210,483.99,FreshFarms
+Electronics Basic Device 65,Electronics,219,206.76,StyleInc
+Sports Eco Product 64,Sports,122,371.49,FitGear
+Electronics Basic Accessory 40,Electronics,17,97.56,FitGear
+Grocery Eco Gadget 76,Grocery,49,88.88,StyleInc
+Sports Elite Device 52,Sports,306,361.59,HomeGoods LLC
+Clothing Eco Product 21,Clothing,468,39.91,FreshFarms
+Sports Classic Product 60,Sports,367,289.68,FitGear
+Grocery Eco Kit 68,Grocery,227,298.93,FreshFarms
+Clothing Max Kit 59,Clothing,68,358.19,FreshFarms
+Sports Basic Item 52,Sports,146,312.71,FreshFarms
+Home & Kitchen Ultra Accessory 55,Home & Kitchen,233,240.86,TechCorp
+Home & Kitchen Premium Accessory 73,Home & Kitchen,137,216.72,TechCorp
+Grocery Super Device 45,Grocery,20,87.92,HomeGoods LLC
+Clothing Pro Gadget 21,Clothing,251,443.42,FreshFarms
+Clothing Basic Bundle 51,Clothing,477,416.09,HomeGoods LLC
+Electronics Ultra Product 13,Electronics,32,327.13,FreshFarms
+Clothing Pro Device 77,Clothing,203,388.67,FitGear
+Clothing Smart Accessory 33,Clothing,367,471.32,StyleInc
+Electronics Classic Gadget 96,Electronics,488,215.82,FitGear
+Electronics Classic Gadget 52,Electronics,65,160.22,StyleInc
+Sports Ultra Bundle 88,Sports,497,155.37,HomeGoods LLC
+Sports Smart Widget 44,Sports,430,273.0,HomeGoods LLC
+Clothing Smart Product 33,Clothing,447,468.76,FreshFarms
+Clothing Basic Pack 25,Clothing,162,390.62,HomeGoods LLC
+Electronics Eco Accessory 12,Electronics,385,407.51,HomeGoods LLC
+Grocery Pro Product 67,Grocery,375,379.02,HomeGoods LLC
+Clothing Pro Tool 98,Clothing,425,224.4,FitGear
+Home & Kitchen Smart Gadget 28,Home & Kitchen,351,103.04,FitGear
+Sports Pro Kit 47,Sports,202,193.88,HomeGoods LLC
+Electronics Smart Accessory 83,Electronics,254,251.52,StyleInc
+Home & Kitchen Super Accessory 20,Home & Kitchen,343,52.7,FitGear
+Grocery Classic Widget 61,Grocery,85,88.45,TechCorp
+Grocery Smart Bundle 88,Grocery,39,490.94,StyleInc
+Sports Super Tool 42,Sports,296,126.44,StyleInc
+Clothing Elite Bundle 95,Clothing,195,443.62,StyleInc
+Sports Super Item 80,Sports,202,5.94,TechCorp
+Clothing Eco Pack 95,Clothing,152,128.12,FreshFarms
+Home & Kitchen Premium Gadget 68,Home & Kitchen,153,403.6,FitGear
+Grocery Pro Kit 47,Grocery,154,106.02,HomeGoods LLC
+Electronics Elite Device 18,Electronics,201,101.08,FreshFarms
+Home & Kitchen Classic Widget 66,Home & Kitchen,270,163.12,FreshFarms
+Electronics Eco Item 78,Electronics,172,224.66,FreshFarms
+Clothing Classic Kit 68,Clothing,226,306.06,FitGear
+Home & Kitchen Pro Product 43,Home & Kitchen,320,390.9,FreshFarms
+Home & Kitchen Smart Pack 84,Home & Kitchen,74,321.0,HomeGoods LLC
+Clothing Pro Product 79,Clothing,351,101.49,FreshFarms
+Home & Kitchen Classic Gadget 62,Home & Kitchen,99,290.29,TechCorp
+Electronics Basic Gadget 25,Electronics,201,47.78,FreshFarms
+Electronics Premium Item 15,Electronics,187,304.0,FitGear
+Sports Smart Widget 44,Sports,49,192.35,FitGear
+Grocery Max Product 75,Grocery,166,254.21,HomeGoods LLC
+Electronics Classic Item 71,Electronics,486,173.75,StyleInc
+Grocery Pro Pack 76,Grocery,9,55.31,FreshFarms
+Grocery Basic Product 51,Grocery,209,321.5,StyleInc
+Electronics Ultra Accessory 41,Electronics,470,275.52,HomeGoods LLC
+Grocery Eco Device 14,Grocery,60,407.11,HomeGoods LLC
+Sports Ultra Item 41,Sports,232,435.88,StyleInc
+Clothing Ultra Accessory 52,Clothing,71,442.52,FreshFarms
+Grocery Ultra Device 83,Grocery,300,227.71,HomeGoods LLC
+Grocery Pro Bundle 97,Grocery,80,243.72,FreshFarms
+Clothing Max Tool 95,Clothing,447,188.4,HomeGoods LLC
+Sports Eco Item 86,Sports,439,307.4,StyleInc
+Clothing Max Tool 63,Clothing,100,467.0,StyleInc
+Sports Elite Widget 11,Sports,90,73.05,FitGear
+Grocery Basic Accessory 25,Grocery,193,445.22,FitGear
+Home & Kitchen Eco Bundle 88,Home & Kitchen,327,372.65,TechCorp
+Sports Basic Kit 27,Sports,247,412.65,StyleInc
+Grocery Smart Widget 33,Grocery,271,437.18,TechCorp
+Home & Kitchen Premium Item 12,Home & Kitchen,179,61.21,TechCorp
+Clothing Basic Gadget 89,Clothing,306,151.01,StyleInc
+Clothing Eco Device 85,Clothing,78,450.74,FreshFarms
+Electronics Eco Kit 39,Electronics,54,291.74,StyleInc
+Electronics Super Device 31,Electronics,390,466.2,FitGear
+Sports Max Gadget 96,Sports,203,98.18,StyleInc
+Electronics Ultra Accessory 81,Electronics,384,40.29,FreshFarms
+Clothing Smart Accessory 96,Clothing,193,471.69,TechCorp
+Electronics Max Kit 52,Electronics,424,493.26,TechCorp
+Electronics Max Kit 51,Electronics,211,286.94,FitGear
+Clothing Premium Gadget 51,Clothing,360,294.42,TechCorp
+Electronics Eco Kit 46,Electronics,6,44.72,TechCorp
+Sports Eco Tool 96,Sports,451,446.98,FitGear
+Grocery Smart Item 12,Grocery,220,99.23,TechCorp
+Grocery Premium Widget 73,Grocery,59,455.45,FreshFarms
+Grocery Ultra Widget 72,Grocery,465,7.28,TechCorp
+Electronics Classic Gadget 69,Electronics,416,355.68,HomeGoods LLC
+Grocery Super Device 66,Grocery,220,108.38,FitGear
+Electronics Max Bundle 17,Electronics,234,350.47,FitGear
+Electronics Classic Accessory 14,Electronics,209,383.34,StyleInc
+Sports Basic Tool 93,Sports,364,181.03,StyleInc
+Sports Super Device 48,Sports,349,56.43,HomeGoods LLC
+Home & Kitchen Pro Gadget 11,Home & Kitchen,177,364.68,TechCorp
+Electronics Smart Product 44,Electronics,70,363.48,HomeGoods LLC
+Electronics Max Item 89,Electronics,290,355.55,FitGear
+Grocery Elite Tool 11,Grocery,31,212.59,StyleInc
+Grocery Premium Pack 31,Grocery,497,63.12,StyleInc
+Grocery Classic Gadget 83,Grocery,335,148.14,TechCorp
+Grocery Eco Bundle 13,Grocery,464,76.84,FreshFarms
+Grocery Super Accessory 98,Grocery,301,344.47,FitGear
+Home & Kitchen Max Product 97,Home & Kitchen,360,324.29,FreshFarms
+Sports Ultra Pack 56,Sports,70,357.29,StyleInc
+Grocery Smart Pack 18,Grocery,20,13.48,FitGear
+Clothing Super Bundle 86,Clothing,373,123.6,FitGear
+Clothing Max Pack 67,Clothing,184,297.87,StyleInc
+Sports Basic Widget 89,Sports,260,293.88,StyleInc
+Clothing Premium Device 44,Clothing,243,340.67,FitGear
+Sports Elite Product 82,Sports,283,41.47,FreshFarms
+Grocery Premium Accessory 46,Grocery,272,253.71,HomeGoods LLC
+Electronics Basic Kit 67,Electronics,82,184.51,TechCorp
+Electronics Eco Tool 59,Electronics,375,267.98,StyleInc
+Clothing Elite Device 95,Clothing,154,273.28,FitGear
+Sports Eco Product 54,Sports,228,79.7,FreshFarms
+Home & Kitchen Max Product 34,Home & Kitchen,246,11.56,StyleInc
+Home & Kitchen Pro Item 68,Home & Kitchen,216,354.76,StyleInc
+Home & Kitchen Classic Product 69,Home & Kitchen,59,136.19,FitGear
+Grocery Smart Kit 80,Grocery,433,437.43,StyleInc
+Electronics Ultra Pack 96,Electronics,298,300.12,FreshFarms
+Grocery Elite Kit 54,Grocery,137,336.83,StyleInc
+Grocery Ultra Gadget 97,Grocery,299,208.02,StyleInc
+Home & Kitchen Elite Tool 24,Home & Kitchen,478,475.31,FitGear
+Home & Kitchen Pro Kit 53,Home & Kitchen,87,271.21,TechCorp
+Grocery Pro Product 37,Grocery,18,455.67,TechCorp
+Electronics Max Device 95,Electronics,38,219.51,FitGear
+Clothing Eco Device 48,Clothing,295,145.56,TechCorp
+Grocery Ultra Product 69,Grocery,441,265.27,FreshFarms
+Grocery Basic Kit 61,Grocery,210,222.45,FitGear
+Clothing Super Item 74,Clothing,387,138.59,HomeGoods LLC
+Clothing Ultra Tool 77,Clothing,24,457.06,TechCorp
+Sports Ultra Device 27,Sports,326,271.56,StyleInc
+Clothing Super Product 90,Clothing,66,201.67,StyleInc
+Electronics Super Item 71,Electronics,199,248.57,FitGear
+Home & Kitchen Eco Device 99,Home & Kitchen,439,410.63,FreshFarms
+Sports Premium Gadget 95,Sports,197,432.67,StyleInc
+Sports Elite Bundle 84,Sports,0,364.93,FreshFarms
+Grocery Basic Widget 17,Grocery,114,387.96,FitGear
+Clothing Ultra Item 18,Clothing,280,477.72,FitGear
+Clothing Ultra Kit 35,Clothing,490,478.52,TechCorp
+Grocery Eco Tool 55,Grocery,57,345.58,FitGear
+Grocery Max Pack 42,Grocery,66,314.91,HomeGoods LLC
+Clothing Pro Pack 50,Clothing,84,19.87,StyleInc
+Sports Classic Accessory 50,Sports,107,195.78,FreshFarms
+Home & Kitchen Premium Tool 47,Home & Kitchen,441,475.43,TechCorp
+Electronics Elite Widget 57,Electronics,489,383.29,FreshFarms
+Grocery Elite Kit 64,Grocery,9,297.44,HomeGoods LLC
+Home & Kitchen Super Tool 84,Home & Kitchen,163,196.83,StyleInc
+Clothing Smart Kit 47,Clothing,6,247.97,FitGear
+Home & Kitchen Eco Tool 81,Home & Kitchen,53,32.95,HomeGoods LLC
+Sports Smart Product 65,Sports,71,216.8,StyleInc
+Grocery Super Pack 97,Grocery,463,33.25,HomeGoods LLC
+Sports Pro Product 23,Sports,473,228.95,FitGear
+Sports Smart Kit 31,Sports,497,102.98,HomeGoods LLC
+Home & Kitchen Eco Gadget 61,Home & Kitchen,200,65.82,FitGear
+Clothing Super Bundle 62,Clothing,343,76.35,FitGear
+Clothing Elite Tool 30,Clothing,92,11.81,FreshFarms
+Electronics Eco Bundle 29,Electronics,385,190.38,FitGear
+Sports Premium Device 23,Sports,223,485.44,FitGear
+Home & Kitchen Premium Tool 46,Home & Kitchen,308,302.94,TechCorp
+Electronics Premium Bundle 63,Electronics,388,275.41,HomeGoods LLC
+Grocery Ultra Item 13,Grocery,237,218.89,FitGear
+Clothing Classic Kit 93,Clothing,472,225.92,StyleInc
+Home & Kitchen Pro Widget 43,Home & Kitchen,235,399.56,TechCorp
+Electronics Eco Accessory 27,Electronics,188,307.22,FitGear
+Electronics Super Device 99,Electronics,462,165.56,StyleInc
+Sports Ultra Device 44,Sports,108,210.6,FitGear
+Home & Kitchen Classic Item 83,Home & Kitchen,73,13.47,FreshFarms
+Clothing Eco Pack 65,Clothing,484,241.68,TechCorp
+Grocery Pro Accessory 76,Grocery,282,243.58,HomeGoods LLC
+Grocery Ultra Tool 96,Grocery,181,412.1,FitGear
+Home & Kitchen Smart Product 59,Home & Kitchen,214,225.11,HomeGoods LLC
+Grocery Max Device 56,Grocery,60,299.18,FreshFarms
+Clothing Eco Pack 82,Clothing,165,468.2,StyleInc
+Grocery Basic Product 27,Grocery,271,32.76,StyleInc
+Electronics Ultra Accessory 91,Electronics,4,38.58,FreshFarms
+Sports Elite Item 30,Sports,49,331.38,FreshFarms
+Electronics Classic Widget 34,Electronics,392,85.88,FreshFarms
+Sports Max Device 88,Sports,361,437.11,FreshFarms
+Grocery Classic Product 64,Grocery,300,155.38,HomeGoods LLC
+Electronics Premium Tool 55,Electronics,218,207.73,StyleInc
+Sports Premium Accessory 66,Sports,183,151.78,HomeGoods LLC
+Electronics Super Pack 48,Electronics,95,117.93,StyleInc
+Home & Kitchen Smart Device 41,Home & Kitchen,498,111.79,TechCorp
+Clothing Basic Item 62,Clothing,453,131.08,FitGear
+Sports Elite Bundle 64,Sports,465,296.0,FitGear
+Grocery Smart Widget 51,Grocery,199,29.65,HomeGoods LLC
+Home & Kitchen Basic Gadget 18,Home & Kitchen,220,107.91,HomeGoods LLC
+Grocery Elite Product 31,Grocery,240,187.19,StyleInc
+Home & Kitchen Basic Gadget 44,Home & Kitchen,75,236.19,HomeGoods LLC
+Sports Super Tool 68,Sports,378,344.27,TechCorp
+Sports Max Device 30,Sports,192,222.54,TechCorp
+Clothing Basic Bundle 63,Clothing,131,141.17,FitGear
+Home & Kitchen Smart Device 61,Home & Kitchen,298,355.01,FitGear
+Electronics Smart Product 43,Electronics,98,384.49,HomeGoods LLC
+Electronics Premium Device 89,Electronics,357,271.28,StyleInc
+Grocery Max Item 55,Grocery,13,15.97,TechCorp
+Electronics Elite Kit 98,Electronics,166,245.21,FitGear
+Clothing Premium Tool 79,Clothing,293,466.17,TechCorp
+Electronics Max Bundle 39,Electronics,231,470.93,TechCorp
+Clothing Ultra Gadget 57,Clothing,434,85.12,TechCorp
+Home & Kitchen Basic Bundle 72,Home & Kitchen,211,208.82,TechCorp
+Home & Kitchen Basic Pack 73,Home & Kitchen,30,272.53,TechCorp
+Home & Kitchen Basic Product 63,Home & Kitchen,300,213.4,FreshFarms
+Grocery Super Device 56,Grocery,338,408.0,FreshFarms
+Electronics Classic Gadget 22,Electronics,390,167.63,TechCorp
+Electronics Classic Bundle 31,Electronics,135,33.83,StyleInc
+Electronics Ultra Product 47,Electronics,114,196.41,FreshFarms
+Home & Kitchen Pro Tool 22,Home & Kitchen,247,188.98,FitGear
+Home & Kitchen Elite Widget 50,Home & Kitchen,353,371.46,TechCorp
+Sports Classic Tool 30,Sports,77,369.36,TechCorp
+Grocery Eco Device 24,Grocery,275,409.96,StyleInc
+Clothing Pro Device 16,Clothing,471,25.78,TechCorp
+Home & Kitchen Max Accessory 22,Home & Kitchen,45,211.44,HomeGoods LLC
+Sports Pro Accessory 72,Sports,166,50.67,TechCorp
+Clothing Premium Tool 18,Clothing,14,355.76,FreshFarms
+Electronics Super Kit 74,Electronics,320,499.34,StyleInc
+Clothing Pro Tool 99,Clothing,262,407.83,TechCorp
+Clothing Classic Tool 32,Clothing,390,223.83,StyleInc
+Home & Kitchen Premium Device 88,Home & Kitchen,178,168.59,TechCorp
+Grocery Smart Item 58,Grocery,134,266.07,HomeGoods LLC
+Sports Elite Pack 90,Sports,366,37.72,FitGear
+Electronics Premium Tool 24,Electronics,42,291.47,TechCorp
+Electronics Premium Kit 34,Electronics,409,294.06,TechCorp
+Clothing Eco Accessory 14,Clothing,297,425.18,HomeGoods LLC
+Grocery Super Gadget 14,Grocery,38,75.16,FitGear
+Sports Basic Gadget 66,Sports,324,264.9,FitGear
+Grocery Classic Item 11,Grocery,71,348.95,FreshFarms
+Grocery Ultra Device 82,Grocery,177,274.26,HomeGoods LLC
+Sports Max Gadget 60,Sports,354,236.46,FitGear
+Grocery Max Accessory 40,Grocery,420,19.13,FitGear
+Clothing Classic Tool 99,Clothing,416,126.95,FreshFarms
+Clothing Pro Item 83,Clothing,304,438.96,HomeGoods LLC
+Electronics Super Pack 67,Electronics,452,189.23,StyleInc
+Home & Kitchen Super Widget 30,Home & Kitchen,157,202.9,TechCorp
+Electronics Eco Accessory 64,Electronics,191,414.87,FitGear
+Clothing Classic Tool 43,Clothing,80,342.3,StyleInc
+Electronics Ultra Tool 93,Electronics,497,366.57,FitGear
+Grocery Premium Gadget 57,Grocery,12,478.45,TechCorp
+Home & Kitchen Classic Gadget 10,Home & Kitchen,293,187.15,FreshFarms
+Clothing Classic Product 50,Clothing,128,379.89,StyleInc
+Sports Pro Kit 23,Sports,182,129.24,StyleInc
+Grocery Classic Kit 85,Grocery,212,312.33,FitGear
+Clothing Elite Tool 28,Clothing,495,332.03,FitGear
+Clothing Eco Tool 61,Clothing,380,217.27,FreshFarms
+Grocery Pro Product 82,Grocery,351,8.51,HomeGoods LLC
+Home & Kitchen Ultra Accessory 99,Home & Kitchen,269,72.9,StyleInc
+Sports Basic Bundle 18,Sports,54,386.43,StyleInc
+Sports Elite Device 10,Sports,23,77.89,HomeGoods LLC
+Sports Max Tool 76,Sports,65,126.54,FreshFarms
+Sports Classic Accessory 23,Sports,372,99.59,StyleInc
+Sports Ultra Tool 67,Sports,43,128.87,FitGear
+Clothing Elite Widget 47,Clothing,21,483.76,HomeGoods LLC
+Sports Basic Accessory 61,Sports,159,338.42,FreshFarms
+Electronics Ultra Widget 35,Electronics,309,448.72,FreshFarms
+Home & Kitchen Ultra Widget 73,Home & Kitchen,275,248.02,TechCorp
+Home & Kitchen Eco Device 59,Home & Kitchen,388,110.99,HomeGoods LLC
+Clothing Super Item 33,Clothing,29,341.62,StyleInc
+Grocery Elite Item 39,Grocery,257,463.14,FitGear
+Home & Kitchen Pro Bundle 86,Home & Kitchen,25,396.15,StyleInc
+Electronics Classic Product 33,Electronics,323,406.27,HomeGoods LLC
+Home & Kitchen Super Bundle 47,Home & Kitchen,242,200.7,FitGear
+Sports Premium Pack 38,Sports,147,315.95,FreshFarms
+Electronics Max Tool 18,Electronics,473,263.45,HomeGoods LLC
+Sports Max Item 88,Sports,300,94.18,TechCorp
+Home & Kitchen Premium Bundle 62,Home & Kitchen,234,211.98,HomeGoods LLC
+Clothing Smart Gadget 99,Clothing,119,144.14,FreshFarms
+Grocery Elite Product 55,Grocery,274,224.45,TechCorp
+Clothing Eco Device 45,Clothing,406,389.48,FreshFarms
+Grocery Ultra Accessory 26,Grocery,178,350.01,StyleInc
+Home & Kitchen Pro Product 77,Home & Kitchen,397,21.93,StyleInc
+Clothing Eco Product 15,Clothing,394,430.11,FreshFarms
+Grocery Super Tool 61,Grocery,254,130.65,FreshFarms
+Electronics Elite Product 24,Electronics,329,364.81,FitGear
+Home & Kitchen Elite Kit 33,Home & Kitchen,378,235.37,FreshFarms
+Sports Pro Device 75,Sports,289,267.13,HomeGoods LLC
+Clothing Max Pack 54,Clothing,83,291.66,FreshFarms
+Grocery Smart Pack 66,Grocery,77,425.74,FitGear
+Home & Kitchen Basic Device 66,Home & Kitchen,365,211.04,TechCorp
+Home & Kitchen Max Gadget 15,Home & Kitchen,82,32.53,StyleInc
+Electronics Ultra Widget 51,Electronics,113,42.65,FreshFarms
+Grocery Super Widget 44,Grocery,398,427.39,FreshFarms
+Home & Kitchen Classic Bundle 49,Home & Kitchen,110,54.67,FitGear
+Sports Pro Tool 36,Sports,319,409.13,StyleInc
+Home & Kitchen Pro Tool 15,Home & Kitchen,79,419.82,FitGear
+Home & Kitchen Ultra Gadget 25,Home & Kitchen,107,441.48,HomeGoods LLC
+Clothing Ultra Pack 13,Clothing,303,440.36,FitGear
+Electronics Max Tool 95,Electronics,231,247.21,StyleInc
+Grocery Max Device 85,Grocery,8,325.07,FitGear
+Sports Basic Device 49,Sports,470,394.65,StyleInc
+Home & Kitchen Eco Item 52,Home & Kitchen,423,444.81,HomeGoods LLC
+Grocery Pro Widget 62,Grocery,493,230.42,HomeGoods LLC
+Home & Kitchen Elite Kit 91,Home & Kitchen,70,438.59,FreshFarms
+Grocery Eco Tool 74,Grocery,322,147.47,StyleInc
+Home & Kitchen Elite Item 44,Home & Kitchen,233,414.01,TechCorp
+Grocery Classic Device 26,Grocery,45,82.14,FitGear
+Electronics Ultra Tool 72,Electronics,462,320.37,StyleInc
+Home & Kitchen Super Item 66,Home & Kitchen,10,25.42,FitGear
+Sports Super Widget 63,Sports,75,207.32,HomeGoods LLC
+Electronics Smart Widget 70,Electronics,148,477.73,StyleInc
+Electronics Max Pack 18,Electronics,471,308.91,FitGear
+Grocery Elite Device 90,Grocery,470,170.34,TechCorp
+Home & Kitchen Elite Device 24,Home & Kitchen,292,239.95,TechCorp
+Sports Max Widget 99,Sports,64,293.05,StyleInc
+Grocery Super Tool 75,Grocery,283,285.14,StyleInc
+Grocery Elite Gadget 30,Grocery,270,443.9,HomeGoods LLC
+Clothing Pro Device 64,Clothing,433,153.16,StyleInc
+Home & Kitchen Classic Widget 50,Home & Kitchen,277,388.75,FitGear
+Home & Kitchen Premium Pack 26,Home & Kitchen,417,458.98,HomeGoods LLC
+Grocery Pro Gadget 48,Grocery,6,374.05,TechCorp
+Electronics Elite Widget 58,Electronics,232,398.02,HomeGoods LLC
+Electronics Classic Accessory 11,Electronics,442,408.8,TechCorp
+Grocery Max Bundle 51,Grocery,330,318.37,StyleInc
+Clothing Basic Widget 60,Clothing,464,254.75,HomeGoods LLC
+Home & Kitchen Basic Pack 97,Home & Kitchen,154,294.19,TechCorp
+Clothing Elite Tool 42,Clothing,421,340.79,FreshFarms
+Electronics Smart Tool 22,Electronics,398,342.13,FitGear
+Home & Kitchen Ultra Kit 48,Home & Kitchen,199,57.23,HomeGoods LLC
+Sports Eco Pack 62,Sports,324,464.78,HomeGoods LLC
+Clothing Classic Accessory 31,Clothing,214,101.63,StyleInc
+Sports Smart Device 36,Sports,136,448.15,FitGear
+Sports Max Accessory 33,Sports,145,389.61,FitGear
+Clothing Smart Pack 43,Clothing,40,52.2,FreshFarms
+Clothing Max Kit 60,Clothing,85,119.71,TechCorp
+Sports Pro Kit 92,Sports,417,77.69,HomeGoods LLC
+Grocery Super Item 60,Grocery,472,386.5,FreshFarms
+Grocery Super Product 73,Grocery,357,208.18,HomeGoods LLC
+Electronics Elite Bundle 23,Electronics,496,160.91,FreshFarms
+Home & Kitchen Pro Pack 29,Home & Kitchen,463,426.87,FreshFarms
+Home & Kitchen Ultra Gadget 52,Home & Kitchen,316,341.62,StyleInc
+Electronics Elite Gadget 92,Electronics,103,420.0,TechCorp
+Sports Eco Pack 26,Sports,364,256.05,TechCorp
+Electronics Smart Kit 59,Electronics,296,102.39,FreshFarms
+Sports Basic Product 97,Sports,55,107.98,TechCorp
+Grocery Pro Product 95,Grocery,64,434.82,HomeGoods LLC
+Clothing Premium Bundle 82,Clothing,228,76.95,TechCorp
+Home & Kitchen Classic Product 29,Home & Kitchen,285,236.67,FreshFarms
+Electronics Smart Item 77,Electronics,413,423.16,TechCorp
+Sports Elite Bundle 47,Sports,101,121.36,TechCorp
+Home & Kitchen Basic Kit 40,Home & Kitchen,223,91.89,HomeGoods LLC
+Sports Pro Accessory 94,Sports,352,108.32,StyleInc
+Grocery Eco Accessory 91,Grocery,311,356.72,HomeGoods LLC
+Grocery Premium Widget 78,Grocery,314,39.77,FitGear
+Sports Ultra Device 24,Sports,75,197.53,HomeGoods LLC
+Home & Kitchen Basic Widget 68,Home & Kitchen,88,433.14,FitGear
+Sports Eco Product 80,Sports,448,283.29,FreshFarms
+Home & Kitchen Max Pack 37,Home & Kitchen,469,246.92,FreshFarms
+Electronics Premium Gadget 33,Electronics,18,289.06,FitGear
+Electronics Super Tool 13,Electronics,344,81.41,FitGear
+Clothing Premium Product 56,Clothing,250,145.6,FreshFarms
+Electronics Ultra Product 50,Electronics,261,128.13,FitGear
+Home & Kitchen Smart Tool 91,Home & Kitchen,91,264.23,FreshFarms
+Grocery Classic Bundle 42,Grocery,458,239.1,FreshFarms
+Home & Kitchen Smart Tool 52,Home & Kitchen,163,150.75,FreshFarms
+Grocery Basic Bundle 77,Grocery,314,465.18,HomeGoods LLC
+Electronics Max Widget 79,Electronics,177,174.12,FreshFarms
+Home & Kitchen Pro Bundle 80,Home & Kitchen,110,178.47,FitGear
+Home & Kitchen Elite Tool 12,Home & Kitchen,415,446.12,StyleInc
+Home & Kitchen Basic Item 47,Home & Kitchen,210,495.78,TechCorp
+Home & Kitchen Super Widget 92,Home & Kitchen,273,32.36,FitGear
+Grocery Ultra Accessory 53,Grocery,402,274.56,FreshFarms
+Grocery Ultra Accessory 49,Grocery,431,19.96,TechCorp
+Grocery Max Device 91,Grocery,479,206.1,TechCorp
+Electronics Elite Item 61,Electronics,275,404.07,FitGear
+Home & Kitchen Elite Device 32,Home & Kitchen,362,305.98,HomeGoods LLC
+Home & Kitchen Classic Tool 91,Home & Kitchen,152,81.69,StyleInc
+Home & Kitchen Max Item 60,Home & Kitchen,296,186.06,FitGear
+Grocery Super Gadget 94,Grocery,369,359.04,HomeGoods LLC
+Grocery Classic Product 83,Grocery,112,474.19,FreshFarms
+Sports Eco Item 46,Sports,249,338.29,FreshFarms
+Clothing Super Kit 55,Clothing,190,329.81,FreshFarms
+Grocery Classic Accessory 42,Grocery,310,129.56,FitGear
+Electronics Eco Tool 11,Electronics,273,225.75,HomeGoods LLC
+Grocery Ultra Tool 26,Grocery,356,490.17,FreshFarms
+Clothing Super Accessory 44,Clothing,481,397.58,FreshFarms
+Clothing Premium Bundle 20,Clothing,193,105.98,HomeGoods LLC
+Home & Kitchen Basic Widget 76,Home & Kitchen,390,283.51,FreshFarms
+Sports Smart Pack 33,Sports,437,180.48,HomeGoods LLC
+Grocery Super Device 78,Grocery,304,146.25,TechCorp
+Sports Eco Accessory 35,Sports,485,430.67,FreshFarms
+Sports Super Tool 34,Sports,464,177.52,StyleInc
+Electronics Max Kit 51,Electronics,109,114.9,StyleInc
+Home & Kitchen Super Device 55,Home & Kitchen,171,104.89,TechCorp
+Electronics Smart Bundle 63,Electronics,172,189.25,FreshFarms
+Grocery Max Accessory 40,Grocery,456,259.85,TechCorp
+Grocery Super Kit 29,Grocery,170,66.01,TechCorp
+Sports Eco Accessory 66,Sports,480,99.85,FreshFarms
+Clothing Basic Kit 40,Clothing,328,497.88,FitGear
+Home & Kitchen Smart Widget 85,Home & Kitchen,216,353.21,HomeGoods LLC
+Sports Smart Gadget 42,Sports,453,328.98,FreshFarms
+Electronics Super Bundle 55,Electronics,313,107.2,HomeGoods LLC
+Electronics Eco Accessory 59,Electronics,87,330.39,StyleInc
+Electronics Max Gadget 74,Electronics,33,30.52,StyleInc
+Electronics Eco Gadget 61,Electronics,384,412.35,TechCorp
+Electronics Max Accessory 23,Electronics,106,31.0,StyleInc
+Home & Kitchen Pro Product 67,Home & Kitchen,302,305.29,FreshFarms
+Clothing Smart Widget 12,Clothing,97,371.07,FitGear
+Clothing Pro Bundle 32,Clothing,221,68.74,FitGear
+Sports Eco Device 85,Sports,433,178.64,TechCorp
+Home & Kitchen Premium Device 44,Home & Kitchen,123,278.19,StyleInc
+Electronics Max Tool 69,Electronics,220,193.07,FreshFarms
+Clothing Super Kit 75,Clothing,175,147.62,TechCorp
+Clothing Smart Pack 37,Clothing,397,403.58,HomeGoods LLC
+Electronics Premium Bundle 45,Electronics,500,226.31,StyleInc
+Sports Max Accessory 40,Sports,469,162.47,FitGear
+Home & Kitchen Basic Device 88,Home & Kitchen,208,71.69,StyleInc
+Clothing Basic Kit 16,Clothing,381,427.54,FitGear
+Home & Kitchen Ultra Product 28,Home & Kitchen,244,457.14,FreshFarms
+Electronics Elite Gadget 69,Electronics,200,117.33,HomeGoods LLC
+Sports Basic Accessory 59,Sports,115,128.15,FreshFarms
+Clothing Premium Accessory 10,Clothing,112,444.79,FitGear
+Grocery Pro Pack 19,Grocery,317,184.19,FreshFarms
+Sports Premium Product 60,Sports,198,242.68,HomeGoods LLC
+Grocery Max Kit 44,Grocery,143,132.7,HomeGoods LLC
+Clothing Eco Bundle 88,Clothing,287,234.88,HomeGoods LLC
+Clothing Eco Widget 12,Clothing,44,86.12,StyleInc
+Grocery Eco Widget 30,Grocery,386,469.75,HomeGoods LLC
+Grocery Ultra Tool 36,Grocery,403,180.61,FitGear
+Sports Elite Kit 48,Sports,82,211.5,FitGear
+Sports Super Tool 37,Sports,269,221.28,HomeGoods LLC
+Clothing Classic Bundle 53,Clothing,79,128.74,FitGear
+Grocery Ultra Accessory 11,Grocery,394,225.16,StyleInc
+Electronics Eco Product 94,Electronics,154,246.41,HomeGoods LLC
+Sports Eco Tool 44,Sports,348,407.7,HomeGoods LLC
+Sports Max Item 67,Sports,407,155.34,HomeGoods LLC
+Sports Elite Device 97,Sports,3,383.9,StyleInc
+Sports Eco Device 35,Sports,479,133.19,HomeGoods LLC
+Grocery Smart Gadget 56,Grocery,445,195.93,StyleInc
+Grocery Classic Device 83,Grocery,167,399.07,FreshFarms
+Sports Classic Gadget 38,Sports,154,344.36,FreshFarms
+Grocery Eco Item 27,Grocery,8,217.16,StyleInc
+Electronics Super Device 49,Electronics,415,353.53,HomeGoods LLC
+Clothing Super Tool 70,Clothing,427,25.96,HomeGoods LLC
+Home & Kitchen Basic Bundle 24,Home & Kitchen,498,427.15,TechCorp
+Clothing Eco Widget 24,Clothing,42,245.49,FitGear
+Electronics Basic Widget 87,Electronics,80,287.75,StyleInc
+Home & Kitchen Ultra Gadget 43,Home & Kitchen,277,487.23,HomeGoods LLC
+Clothing Elite Product 51,Clothing,108,335.66,TechCorp
+Electronics Max Pack 22,Electronics,44,209.0,StyleInc
+Electronics Super Gadget 27,Electronics,70,328.17,StyleInc
+Electronics Basic Kit 14,Electronics,31,68.92,StyleInc
+Grocery Max Product 74,Grocery,294,444.87,FreshFarms
+Clothing Pro Item 48,Clothing,293,429.06,StyleInc
+Home & Kitchen Elite Product 22,Home & Kitchen,135,110.91,TechCorp
+Sports Eco Gadget 46,Sports,111,122.68,FitGear
+Clothing Elite Kit 70,Clothing,100,107.13,StyleInc
+Electronics Eco Kit 48,Electronics,326,387.69,FitGear
+Sports Premium Pack 64,Sports,276,18.55,HomeGoods LLC
+Sports Max Widget 93,Sports,279,87.39,StyleInc
+Electronics Pro Kit 40,Electronics,425,186.49,HomeGoods LLC
+Home & Kitchen Ultra Tool 80,Home & Kitchen,353,227.17,StyleInc
+Home & Kitchen Smart Bundle 62,Home & Kitchen,123,403.34,StyleInc
+Clothing Classic Tool 12,Clothing,358,39.36,TechCorp
+Clothing Eco Accessory 33,Clothing,399,447.6,StyleInc
+Electronics Max Widget 54,Electronics,481,22.39,FreshFarms
+Grocery Classic Item 10,Grocery,146,453.15,FreshFarms
+Clothing Elite Accessory 53,Clothing,432,51.57,FreshFarms
+Clothing Basic Bundle 34,Clothing,395,301.55,StyleInc
+Home & Kitchen Classic Gadget 30,Home & Kitchen,95,387.94,HomeGoods LLC
+Electronics Premium Widget 12,Electronics,472,322.4,FreshFarms
+Electronics Ultra Gadget 94,Electronics,64,126.12,TechCorp
+Sports Elite Device 81,Sports,205,237.13,HomeGoods LLC
+Home & Kitchen Classic Product 74,Home & Kitchen,164,156.12,TechCorp
+Sports Super Bundle 35,Sports,316,477.27,FitGear
+Grocery Basic Accessory 19,Grocery,447,155.47,HomeGoods LLC
+Electronics Premium Widget 90,Electronics,314,313.84,FreshFarms
+Clothing Ultra Device 86,Clothing,273,468.5,TechCorp
+Sports Max Gadget 49,Sports,440,336.5,FreshFarms
+Grocery Eco Tool 58,Grocery,218,237.71,FreshFarms
+Home & Kitchen Classic Accessory 20,Home & Kitchen,354,452.51,TechCorp
+Sports Elite Accessory 16,Sports,347,212.27,HomeGoods LLC
+Electronics Ultra Accessory 99,Electronics,52,257.3,FitGear
+Clothing Premium Kit 62,Clothing,208,381.22,TechCorp
+Sports Max Tool 91,Sports,225,213.15,FreshFarms
+Sports Premium Tool 63,Sports,51,209.66,TechCorp
+Grocery Premium Item 69,Grocery,257,365.08,TechCorp
+Home & Kitchen Premium Pack 44,Home & Kitchen,233,374.37,StyleInc
+Grocery Premium Item 55,Grocery,455,299.69,FreshFarms
+Electronics Classic Accessory 51,Electronics,187,343.12,FreshFarms
+Clothing Eco Kit 67,Clothing,33,262.68,HomeGoods LLC
+Clothing Premium Product 70,Clothing,73,19.25,FreshFarms
+Clothing Smart Tool 58,Clothing,37,208.57,HomeGoods LLC
+Electronics Smart Item 53,Electronics,490,487.39,StyleInc
+Grocery Classic Tool 96,Grocery,219,150.45,FreshFarms
+Clothing Basic Device 92,Clothing,468,170.51,FreshFarms
+Sports Pro Item 87,Sports,181,331.51,StyleInc
+Electronics Super Gadget 16,Electronics,30,124.88,HomeGoods LLC
+Sports Basic Product 99,Sports,49,383.65,StyleInc
+Electronics Elite Kit 78,Electronics,158,444.33,StyleInc
+Sports Max Device 13,Sports,442,424.11,FreshFarms
+Home & Kitchen Premium Widget 74,Home & Kitchen,26,272.01,HomeGoods LLC
+Grocery Eco Item 59,Grocery,148,16.19,StyleInc
+Grocery Elite Device 15,Grocery,166,307.81,HomeGoods LLC
+Home & Kitchen Premium Product 78,Home & Kitchen,2,127.27,FitGear
+Home & Kitchen Basic Device 74,Home & Kitchen,249,384.2,TechCorp
+Clothing Ultra Bundle 10,Clothing,421,460.55,FreshFarms
+Grocery Classic Widget 78,Grocery,10,398.3,FreshFarms
+Electronics Elite Gadget 49,Electronics,156,234.29,TechCorp
+Clothing Max Device 15,Clothing,162,318.05,FreshFarms
+Grocery Basic Bundle 55,Grocery,465,228.35,StyleInc
+Sports Max Bundle 47,Sports,493,219.71,FitGear
+Sports Classic Gadget 30,Sports,406,449.51,FreshFarms
+Clothing Pro Kit 38,Clothing,12,404.04,FitGear
+Sports Classic Product 79,Sports,229,159.31,TechCorp
+Clothing Eco Device 98,Clothing,358,101.72,FitGear
+Home & Kitchen Ultra Bundle 50,Home & Kitchen,139,66.22,TechCorp
+Sports Elite Item 91,Sports,391,415.17,StyleInc
+Home & Kitchen Ultra Kit 36,Home & Kitchen,386,373.58,FreshFarms
+Sports Premium Tool 85,Sports,158,386.26,HomeGoods LLC
+Electronics Pro Accessory 64,Electronics,78,149.33,StyleInc
+Electronics Basic Bundle 43,Electronics,350,21.84,FitGear
+Sports Super Product 62,Sports,174,441.91,HomeGoods LLC
+Sports Premium Tool 44,Sports,335,395.32,FitGear
+Clothing Classic Kit 86,Clothing,331,111.66,HomeGoods LLC
+Grocery Smart Bundle 72,Grocery,458,120.27,FreshFarms
+Grocery Basic Gadget 73,Grocery,69,190.7,StyleInc
+Sports Super Product 53,Sports,293,302.09,StyleInc
+Electronics Premium Widget 13,Electronics,488,442.09,FreshFarms
+Home & Kitchen Super Kit 53,Home & Kitchen,291,190.58,FreshFarms
+Home & Kitchen Eco Device 25,Home & Kitchen,176,468.09,HomeGoods LLC
+Home & Kitchen Super Kit 55,Home & Kitchen,262,427.32,TechCorp
+Grocery Premium Tool 16,Grocery,211,301.48,TechCorp
+Grocery Basic Accessory 31,Grocery,71,382.92,FreshFarms
+Electronics Premium Product 68,Electronics,461,422.41,StyleInc
+Grocery Pro Kit 38,Grocery,315,450.04,HomeGoods LLC
+Clothing Classic Pack 87,Clothing,485,162.31,HomeGoods LLC
+Home & Kitchen Smart Gadget 12,Home & Kitchen,464,333.61,StyleInc
+Sports Pro Kit 20,Sports,257,75.74,FitGear
+Electronics Ultra Tool 45,Electronics,325,110.08,HomeGoods LLC
+Sports Classic Accessory 67,Sports,89,333.9,StyleInc
+Electronics Smart Gadget 50,Electronics,218,408.38,FreshFarms
+Grocery Premium Pack 29,Grocery,321,357.97,FitGear
+Sports Classic Pack 25,Sports,100,45.87,FitGear
+Home & Kitchen Pro Tool 35,Home & Kitchen,461,47.98,HomeGoods LLC
+Sports Max Tool 73,Sports,121,441.23,TechCorp
+Sports Smart Accessory 37,Sports,51,349.85,FreshFarms
+Home & Kitchen Max Widget 14,Home & Kitchen,143,275.75,FitGear
+Clothing Premium Device 61,Clothing,412,26.81,TechCorp
+Home & Kitchen Smart Item 81,Home & Kitchen,140,251.99,HomeGoods LLC
+Home & Kitchen Smart Accessory 11,Home & Kitchen,385,485.97,FitGear
+Sports Super Item 76,Sports,78,189.85,FitGear
+Home & Kitchen Max Bundle 93,Home & Kitchen,66,412.86,FitGear
+Electronics Max Kit 60,Electronics,467,385.06,TechCorp
+Sports Basic Gadget 86,Sports,227,233.58,FreshFarms
+Electronics Ultra Device 15,Electronics,361,273.95,HomeGoods LLC
+Clothing Smart Kit 83,Clothing,83,125.27,FreshFarms
+Clothing Pro Pack 97,Clothing,316,381.63,FitGear
+Sports Eco Gadget 63,Sports,81,386.93,HomeGoods LLC
+Home & Kitchen Basic Accessory 14,Home & Kitchen,129,449.1,FitGear
+Sports Eco Product 12,Sports,162,231.51,StyleInc
+Home & Kitchen Classic Widget 37,Home & Kitchen,292,45.18,FreshFarms
+Sports Super Bundle 56,Sports,397,67.89,TechCorp
+Home & Kitchen Pro Item 22,Home & Kitchen,2,416.2,FreshFarms
+Sports Premium Pack 92,Sports,369,412.79,TechCorp
+Clothing Classic Pack 34,Clothing,396,227.07,HomeGoods LLC
+Electronics Eco Device 27,Electronics,232,92.36,FreshFarms
+Electronics Classic Widget 15,Electronics,489,350.78,FitGear
+Home & Kitchen Eco Device 78,Home & Kitchen,401,451.54,HomeGoods LLC
+Home & Kitchen Super Item 62,Home & Kitchen,181,495.49,HomeGoods LLC
+Clothing Ultra Bundle 44,Clothing,170,335.39,FreshFarms
+Sports Smart Tool 62,Sports,364,31.71,TechCorp
+Electronics Premium Item 98,Electronics,137,336.3,StyleInc
+Grocery Eco Product 96,Grocery,12,377.37,HomeGoods LLC
+Grocery Super Product 98,Grocery,458,130.69,StyleInc
+Home & Kitchen Elite Kit 65,Home & Kitchen,462,123.46,TechCorp
+Sports Eco Gadget 73,Sports,82,329.74,FreshFarms
+Grocery Max Gadget 37,Grocery,403,43.16,HomeGoods LLC
+Sports Smart Tool 57,Sports,10,276.47,HomeGoods LLC
+Clothing Pro Tool 61,Clothing,87,87.54,HomeGoods LLC
+Grocery Smart Bundle 59,Grocery,132,183.72,FitGear
+Sports Ultra Tool 21,Sports,418,375.35,TechCorp
+Electronics Pro Kit 23,Electronics,434,310.26,FreshFarms
+Home & Kitchen Basic Kit 35,Home & Kitchen,337,33.93,HomeGoods LLC
+Clothing Classic Widget 87,Clothing,77,433.16,TechCorp
+Electronics Pro Bundle 60,Electronics,314,151.16,HomeGoods LLC
+Home & Kitchen Premium Bundle 89,Home & Kitchen,350,53.96,FitGear
+Home & Kitchen Pro Product 46,Home & Kitchen,336,330.66,FitGear
+Sports Elite Accessory 97,Sports,28,138.66,HomeGoods LLC
+Home & Kitchen Smart Kit 90,Home & Kitchen,253,409.5,HomeGoods LLC
+Grocery Basic Bundle 96,Grocery,179,184.74,FreshFarms
+Electronics Pro Widget 51,Electronics,323,211.22,FitGear
+Clothing Smart Pack 41,Clothing,62,121.55,FreshFarms
+Grocery Max Kit 90,Grocery,313,244.18,HomeGoods LLC
+Sports Super Device 20,Sports,106,210.91,TechCorp
+Sports Smart Product 10,Sports,43,116.63,FreshFarms
+Electronics Classic Widget 72,Electronics,56,354.34,TechCorp
+Electronics Basic Product 45,Electronics,8,171.81,TechCorp
+Electronics Premium Gadget 95,Electronics,463,255.13,StyleInc
+Electronics Smart Accessory 37,Electronics,137,99.25,HomeGoods LLC
+Electronics Super Accessory 80,Electronics,394,373.3,HomeGoods LLC
+Grocery Max Accessory 62,Grocery,80,466.2,HomeGoods LLC
+Home & Kitchen Ultra Tool 47,Home & Kitchen,493,55.08,TechCorp
+Home & Kitchen Super Tool 29,Home & Kitchen,195,417.87,FreshFarms
+Grocery Ultra Device 25,Grocery,215,364.26,StyleInc
+Electronics Ultra Kit 75,Electronics,153,264.46,FreshFarms
+Electronics Max Kit 76,Electronics,338,490.71,FitGear
+Sports Smart Bundle 84,Sports,61,439.07,StyleInc
+Grocery Smart Item 68,Grocery,20,117.17,TechCorp
+Electronics Eco Bundle 66,Electronics,478,333.94,StyleInc
+Clothing Ultra Kit 13,Clothing,195,94.51,StyleInc
+Home & Kitchen Max Gadget 23,Home & Kitchen,174,204.58,HomeGoods LLC
+Electronics Super Item 15,Electronics,365,176.01,HomeGoods LLC
+Electronics Pro Pack 18,Electronics,129,5.57,TechCorp
+Grocery Super Tool 92,Grocery,482,392.54,FreshFarms
+Sports Classic Widget 24,Sports,244,478.32,StyleInc
+Grocery Smart Item 66,Grocery,49,140.76,FitGear
+Grocery Basic Tool 89,Grocery,216,469.92,FitGear
+Sports Super Widget 34,Sports,373,386.21,TechCorp
+Clothing Super Bundle 24,Clothing,2,220.71,TechCorp
+Clothing Ultra Device 45,Clothing,323,102.1,HomeGoods LLC
+Grocery Eco Product 68,Grocery,105,301.26,FreshFarms
+Grocery Smart Pack 68,Grocery,82,269.65,TechCorp
+Grocery Classic Item 50,Grocery,325,285.75,HomeGoods LLC
+Electronics Premium Bundle 18,Electronics,14,472.24,StyleInc
+Electronics Pro Device 31,Electronics,179,186.79,StyleInc
+Clothing Classic Tool 80,Clothing,45,278.43,StyleInc
+Sports Smart Accessory 23,Sports,295,20.02,HomeGoods LLC
+Electronics Smart Widget 13,Electronics,273,408.77,HomeGoods LLC
+Grocery Premium Pack 60,Grocery,213,121.73,FitGear
+Sports Elite Product 34,Sports,344,32.43,HomeGoods LLC
+Sports Pro Bundle 74,Sports,11,257.47,HomeGoods LLC
+Grocery Ultra Item 59,Grocery,423,290.51,HomeGoods LLC
+Clothing Ultra Item 90,Clothing,380,483.86,StyleInc
+Home & Kitchen Elite Widget 91,Home & Kitchen,36,93.22,TechCorp
+Clothing Pro Widget 24,Clothing,245,77.11,FitGear
+Grocery Eco Bundle 26,Grocery,191,340.31,FreshFarms
+Sports Max Widget 52,Sports,234,336.65,FitGear
+Sports Classic Gadget 18,Sports,241,475.64,TechCorp
+Electronics Max Widget 10,Electronics,396,56.64,StyleInc
+Grocery Classic Kit 26,Grocery,228,470.92,TechCorp
+Clothing Pro Widget 95,Clothing,393,102.69,FreshFarms
+Sports Elite Kit 48,Sports,291,79.56,FitGear
+Clothing Elite Widget 33,Clothing,55,151.33,StyleInc
+Grocery Basic Tool 99,Grocery,278,437.8,FreshFarms
+Electronics Max Gadget 77,Electronics,316,489.67,FreshFarms
+Grocery Premium Device 50,Grocery,288,247.96,TechCorp
+Clothing Pro Product 70,Clothing,191,162.06,HomeGoods LLC
+Clothing Super Widget 25,Clothing,478,468.05,FreshFarms
+Sports Super Product 23,Sports,375,351.15,FitGear
+Sports Pro Accessory 49,Sports,3,446.22,TechCorp
+Home & Kitchen Pro Device 44,Home & Kitchen,26,454.62,TechCorp
+Grocery Basic Kit 38,Grocery,397,365.99,FitGear
+Grocery Super Kit 96,Grocery,428,345.21,FreshFarms
+Clothing Smart Pack 18,Clothing,284,381.57,TechCorp
+Electronics Max Widget 28,Electronics,209,282.69,FreshFarms
+Electronics Classic Device 13,Electronics,187,243.07,FreshFarms
+Sports Classic Kit 28,Sports,282,223.71,FitGear
+Grocery Eco Item 37,Grocery,478,298.74,FreshFarms
+Clothing Premium Item 17,Clothing,199,238.98,StyleInc
+Clothing Eco Kit 97,Clothing,390,234.37,FreshFarms
+Clothing Elite Device 92,Clothing,346,79.14,HomeGoods LLC
+Clothing Smart Bundle 78,Clothing,323,81.72,FitGear
+Home & Kitchen Ultra Device 24,Home & Kitchen,353,184.02,TechCorp
+Home & Kitchen Basic Device 77,Home & Kitchen,63,290.37,FreshFarms
+Home & Kitchen Pro Bundle 93,Home & Kitchen,16,57.87,FitGear
+Sports Max Product 81,Sports,345,224.59,TechCorp
+Electronics Super Kit 99,Electronics,492,373.0,TechCorp
+Home & Kitchen Basic Item 17,Home & Kitchen,250,487.82,FitGear
+Home & Kitchen Eco Product 86,Home & Kitchen,492,268.41,StyleInc
+Electronics Elite Kit 17,Electronics,61,496.15,HomeGoods LLC
+Grocery Pro Tool 59,Grocery,164,110.28,FitGear
+Clothing Eco Gadget 74,Clothing,169,203.75,FreshFarms
+Sports Super Accessory 49,Sports,203,394.78,FitGear
+Grocery Basic Pack 49,Grocery,439,371.75,FreshFarms
+Clothing Smart Bundle 63,Clothing,49,191.4,TechCorp
+Home & Kitchen Premium Tool 35,Home & Kitchen,472,164.99,FreshFarms
+Electronics Max Pack 98,Electronics,448,314.84,TechCorp
+Sports Elite Accessory 92,Sports,423,293.11,FitGear
+Electronics Smart Gadget 44,Electronics,157,440.42,FreshFarms
+Electronics Classic Item 19,Electronics,52,387.59,StyleInc
+Clothing Super Pack 71,Clothing,317,285.35,FreshFarms
+Electronics Elite Item 30,Electronics,312,103.2,HomeGoods LLC
+Sports Super Pack 37,Sports,93,475.39,StyleInc
+Clothing Smart Widget 44,Clothing,367,106.22,HomeGoods LLC
+Electronics Smart Item 31,Electronics,480,112.03,TechCorp
+Clothing Pro Gadget 53,Clothing,349,432.96,FitGear
+Grocery Ultra Pack 50,Grocery,351,106.11,StyleInc
+Clothing Elite Product 51,Clothing,264,426.67,FreshFarms
+Home & Kitchen Super Product 29,Home & Kitchen,49,283.77,HomeGoods LLC
+Home & Kitchen Super Item 42,Home & Kitchen,211,360.6,FitGear
+Clothing Super Pack 58,Clothing,9,6.95,FitGear
+Grocery Super Accessory 21,Grocery,164,158.57,FreshFarms
+Electronics Pro Bundle 77,Electronics,267,459.66,HomeGoods LLC
+Grocery Pro Accessory 22,Grocery,199,25.94,StyleInc
+Clothing Premium Item 33,Clothing,134,5.82,HomeGoods LLC
+Clothing Smart Pack 24,Clothing,494,138.98,TechCorp
+Clothing Premium Bundle 63,Clothing,363,117.63,FreshFarms
+Home & Kitchen Ultra Bundle 48,Home & Kitchen,202,41.28,FreshFarms
+Electronics Pro Kit 86,Electronics,301,289.67,StyleInc
+Grocery Smart Pack 81,Grocery,375,283.06,TechCorp
+Home & Kitchen Basic Device 69,Home & Kitchen,389,247.11,StyleInc
+Home & Kitchen Max Tool 85,Home & Kitchen,224,81.31,FreshFarms
+Grocery Eco Widget 71,Grocery,174,130.26,FitGear
+Grocery Super Item 91,Grocery,243,89.68,FreshFarms
+Grocery Max Gadget 57,Grocery,407,77.81,TechCorp
+Grocery Smart Gadget 58,Grocery,57,354.14,TechCorp
+Clothing Premium Pack 31,Clothing,38,232.29,FitGear
+Electronics Super Kit 69,Electronics,375,497.84,TechCorp
+Sports Smart Device 29,Sports,343,108.35,FitGear
+Clothing Elite Device 84,Clothing,112,108.14,FitGear
+Electronics Ultra Pack 48,Electronics,354,289.64,FreshFarms
+Electronics Elite Bundle 57,Electronics,312,318.98,FitGear
+Grocery Ultra Kit 60,Grocery,281,153.66,FitGear
+Home & Kitchen Classic Widget 64,Home & Kitchen,327,148.3,HomeGoods LLC
+Sports Super Tool 47,Sports,267,445.28,FitGear
+Sports Eco Bundle 95,Sports,147,300.86,StyleInc
+Grocery Pro Accessory 93,Grocery,393,490.39,FitGear
+Electronics Super Bundle 39,Electronics,445,71.3,StyleInc
+Grocery Ultra Tool 92,Grocery,201,382.89,HomeGoods LLC
+Electronics Ultra Device 90,Electronics,154,338.74,HomeGoods LLC
+Grocery Max Bundle 40,Grocery,413,374.66,FitGear
+Home & Kitchen Basic Tool 47,Home & Kitchen,107,294.9,HomeGoods LLC
+Clothing Classic Pack 84,Clothing,313,19.36,FitGear
+Sports Pro Widget 16,Sports,225,124.54,FreshFarms
+Sports Smart Widget 41,Sports,482,18.75,TechCorp
+Grocery Classic Tool 34,Grocery,197,428.42,HomeGoods LLC
+Clothing Eco Widget 91,Clothing,148,58.63,StyleInc
+Home & Kitchen Classic Kit 19,Home & Kitchen,19,177.94,TechCorp
+Electronics Eco Product 98,Electronics,86,490.48,FitGear
+Electronics Ultra Device 90,Electronics,496,233.03,StyleInc
+Electronics Max Kit 42,Electronics,341,462.49,TechCorp
+Electronics Pro Bundle 25,Electronics,422,229.41,FreshFarms
+Clothing Eco Product 69,Clothing,413,398.48,TechCorp
+Electronics Max Kit 77,Electronics,11,378.69,FitGear
+Grocery Basic Device 59,Grocery,350,499.33,HomeGoods LLC
+Sports Basic Widget 71,Sports,463,261.75,HomeGoods LLC
+Electronics Eco Accessory 75,Electronics,428,28.35,FitGear
+Sports Eco Accessory 74,Sports,237,231.41,StyleInc
+Clothing Classic Tool 46,Clothing,497,251.14,StyleInc
+Electronics Eco Gadget 35,Electronics,190,353.69,TechCorp
+Electronics Pro Gadget 67,Electronics,366,233.56,FitGear
+Grocery Basic Gadget 89,Grocery,261,328.05,HomeGoods LLC
+Electronics Classic Item 66,Electronics,17,389.25,FreshFarms
+Clothing Super Kit 90,Clothing,458,360.1,FreshFarms
+Clothing Smart Item 96,Clothing,451,211.98,HomeGoods LLC
+Grocery Ultra Tool 48,Grocery,310,405.36,HomeGoods LLC
+Electronics Classic Accessory 79,Electronics,236,35.62,FitGear
+Clothing Classic Device 63,Clothing,223,211.38,FitGear
+Grocery Basic Accessory 13,Grocery,5,65.81,FitGear
+Clothing Eco Gadget 23,Clothing,460,79.5,HomeGoods LLC
+Clothing Premium Tool 95,Clothing,439,312.52,StyleInc
+Sports Pro Bundle 97,Sports,180,93.75,HomeGoods LLC
+Grocery Elite Tool 66,Grocery,377,414.19,HomeGoods LLC
+Sports Basic Gadget 53,Sports,308,360.73,FitGear
+Grocery Elite Accessory 91,Grocery,391,32.62,StyleInc
+Home & Kitchen Premium Accessory 98,Home & Kitchen,277,102.62,FreshFarms
+Home & Kitchen Ultra Accessory 52,Home & Kitchen,166,216.16,HomeGoods LLC
+Clothing Basic Widget 36,Clothing,70,244.85,FreshFarms
+Electronics Basic Widget 39,Electronics,233,293.42,FitGear
+Home & Kitchen Smart Gadget 35,Home & Kitchen,7,296.45,TechCorp
+Home & Kitchen Classic Item 86,Home & Kitchen,292,257.42,StyleInc
+Home & Kitchen Basic Widget 31,Home & Kitchen,107,301.92,StyleInc
+Grocery Super Item 88,Grocery,173,497.77,FreshFarms
+Clothing Super Kit 11,Clothing,28,229.11,HomeGoods LLC
+Sports Basic Pack 25,Sports,33,221.68,FreshFarms
+Home & Kitchen Elite Kit 77,Home & Kitchen,290,132.36,HomeGoods LLC
+Home & Kitchen Eco Device 32,Home & Kitchen,491,264.76,FitGear
+Sports Classic Bundle 84,Sports,391,98.27,FitGear
+Home & Kitchen Premium Gadget 67,Home & Kitchen,134,69.37,StyleInc
+Clothing Super Device 72,Clothing,163,79.11,FitGear
+Grocery Pro Widget 98,Grocery,413,11.9,FitGear
+Home & Kitchen Premium Pack 25,Home & Kitchen,364,300.03,FitGear
+Clothing Max Bundle 35,Clothing,210,273.02,HomeGoods LLC
+Grocery Smart Kit 46,Grocery,395,24.92,TechCorp
+Grocery Max Bundle 11,Grocery,210,270.95,TechCorp
+Electronics Super Kit 94,Electronics,74,41.09,TechCorp
+Grocery Eco Kit 99,Grocery,221,192.8,StyleInc
+Grocery Super Widget 59,Grocery,266,271.83,TechCorp
+Home & Kitchen Elite Gadget 31,Home & Kitchen,409,267.83,FitGear
+Grocery Eco Product 85,Grocery,239,234.88,FitGear
+Home & Kitchen Elite Pack 27,Home & Kitchen,203,57.91,HomeGoods LLC
+Home & Kitchen Ultra Gadget 13,Home & Kitchen,442,404.48,TechCorp
+Grocery Smart Item 38,Grocery,273,211.77,StyleInc
+Electronics Ultra Kit 33,Electronics,236,272.11,StyleInc
+Sports Eco Accessory 78,Sports,459,228.17,StyleInc
+Sports Premium Product 94,Sports,180,52.85,FitGear
+Home & Kitchen Pro Kit 77,Home & Kitchen,462,107.08,HomeGoods LLC
+Grocery Smart Tool 92,Grocery,224,130.91,FreshFarms
+Sports Pro Tool 89,Sports,68,273.22,FitGear
+Clothing Ultra Device 91,Clothing,125,94.34,FreshFarms
+Electronics Classic Tool 58,Electronics,78,243.57,FitGear
+Home & Kitchen Premium Tool 53,Home & Kitchen,86,413.66,StyleInc
+Electronics Eco Accessory 45,Electronics,299,353.26,HomeGoods LLC
+Electronics Pro Device 47,Electronics,158,170.67,StyleInc
+Grocery Max Device 49,Grocery,97,263.05,FreshFarms
+Clothing Premium Item 77,Clothing,258,309.37,FreshFarms
+Electronics Pro Widget 70,Electronics,162,227.01,StyleInc
+Electronics Smart Item 54,Electronics,213,447.34,TechCorp
+Home & Kitchen Ultra Product 85,Home & Kitchen,306,123.8,FitGear
+Electronics Basic Widget 70,Electronics,159,247.67,HomeGoods LLC
+Sports Smart Accessory 43,Sports,263,460.81,TechCorp
+Sports Super Widget 13,Sports,364,343.17,FreshFarms
+Home & Kitchen Elite Bundle 31,Home & Kitchen,251,367.81,TechCorp
+Sports Max Product 75,Sports,432,221.46,FreshFarms
+Clothing Basic Gadget 22,Clothing,89,196.95,FitGear
+Grocery Premium Device 35,Grocery,360,224.08,FreshFarms
+Electronics Pro Gadget 68,Electronics,459,244.88,FitGear
+Electronics Premium Gadget 75,Electronics,288,307.1,FitGear
+Home & Kitchen Pro Widget 32,Home & Kitchen,209,483.4,FitGear
+Home & Kitchen Elite Item 30,Home & Kitchen,46,475.21,FreshFarms
+Electronics Basic Bundle 77,Electronics,12,294.92,StyleInc
+Home & Kitchen Classic Gadget 78,Home & Kitchen,90,92.04,TechCorp
+Grocery Elite Gadget 83,Grocery,226,497.2,StyleInc
+Home & Kitchen Smart Accessory 51,Home & Kitchen,499,181.84,FitGear
+Home & Kitchen Premium Product 57,Home & Kitchen,221,487.82,TechCorp
+Sports Smart Widget 76,Sports,271,425.32,FitGear
+Clothing Super Device 71,Clothing,281,286.44,FitGear
+Sports Premium Pack 93,Sports,158,320.45,StyleInc
+Home & Kitchen Super Product 70,Home & Kitchen,299,492.47,HomeGoods LLC
+Electronics Basic Bundle 36,Electronics,288,421.16,TechCorp
+Sports Classic Bundle 31,Sports,342,288.19,StyleInc
+Home & Kitchen Elite Item 91,Home & Kitchen,263,200.16,TechCorp
+Grocery Classic Bundle 75,Grocery,333,333.91,FitGear
+Electronics Elite Tool 71,Electronics,332,120.74,TechCorp
+Home & Kitchen Basic Pack 10,Home & Kitchen,163,148.15,FreshFarms
+Clothing Classic Bundle 21,Clothing,482,331.12,StyleInc
+Electronics Elite Widget 74,Electronics,261,309.55,FitGear
+Electronics Eco Widget 53,Electronics,401,358.96,HomeGoods LLC
+Sports Ultra Gadget 25,Sports,408,372.09,FitGear
+Home & Kitchen Classic Pack 34,Home & Kitchen,493,309.65,FitGear
+Electronics Super Pack 79,Electronics,496,34.39,HomeGoods LLC
+Sports Max Gadget 19,Sports,165,321.9,StyleInc
+Electronics Smart Widget 23,Electronics,254,456.78,TechCorp
+Clothing Pro Device 61,Clothing,419,305.56,FreshFarms
+Electronics Super Product 25,Electronics,274,91.79,TechCorp
+Sports Elite Item 50,Sports,231,225.2,HomeGoods LLC
+Sports Smart Device 33,Sports,181,365.96,FreshFarms
+Sports Classic Accessory 66,Sports,130,180.58,FitGear
+Grocery Super Pack 79,Grocery,168,321.85,StyleInc
+Grocery Pro Accessory 47,Grocery,418,300.52,FreshFarms
+Clothing Elite Bundle 81,Clothing,74,169.06,FitGear
+Sports Pro Pack 97,Sports,448,444.72,StyleInc
+Home & Kitchen Max Kit 28,Home & Kitchen,343,386.54,FitGear
+Home & Kitchen Smart Tool 53,Home & Kitchen,369,147.1,FitGear
+Sports Elite Kit 76,Sports,459,490.38,FitGear
+Sports Pro Gadget 11,Sports,85,196.18,StyleInc
+Electronics Super Gadget 92,Electronics,378,216.81,HomeGoods LLC
+Sports Pro Device 28,Sports,74,78.6,StyleInc
+Clothing Premium Item 94,Clothing,349,485.94,HomeGoods LLC
+Sports Elite Device 82,Sports,483,453.66,FreshFarms
+Sports Max Tool 60,Sports,413,135.32,HomeGoods LLC
+Clothing Eco Tool 25,Clothing,399,118.7,TechCorp
+Sports Classic Item 60,Sports,335,376.54,FreshFarms
+Clothing Smart Widget 49,Clothing,357,79.52,StyleInc
+Grocery Premium Tool 86,Grocery,461,106.32,HomeGoods LLC
+Home & Kitchen Premium Gadget 63,Home & Kitchen,166,133.17,FitGear
+Sports Super Gadget 31,Sports,202,377.16,FitGear
+Clothing Elite Gadget 70,Clothing,357,334.63,StyleInc
+Sports Ultra Bundle 67,Sports,131,326.77,TechCorp
+Clothing Premium Device 51,Clothing,193,366.72,TechCorp
+Electronics Classic Gadget 57,Electronics,112,199.56,StyleInc
+Grocery Max Item 91,Grocery,128,140.41,HomeGoods LLC
+Sports Super Product 16,Sports,425,74.52,HomeGoods LLC
+Electronics Classic Product 64,Electronics,200,220.37,TechCorp
+Electronics Premium Widget 60,Electronics,68,293.81,StyleInc
+Sports Elite Kit 84,Sports,192,76.32,HomeGoods LLC
+Home & Kitchen Premium Bundle 38,Home & Kitchen,419,113.96,HomeGoods LLC
+Sports Max Device 45,Sports,390,183.6,FitGear
+Sports Pro Accessory 66,Sports,296,225.39,StyleInc
+Grocery Super Gadget 16,Grocery,290,58.78,TechCorp
+Electronics Premium Bundle 97,Electronics,254,164.61,FitGear
+Grocery Elite Device 11,Grocery,349,64.78,FitGear
+Grocery Pro Product 98,Grocery,33,14.33,TechCorp
+Home & Kitchen Pro Gadget 31,Home & Kitchen,279,445.57,TechCorp
+Electronics Super Bundle 76,Electronics,408,16.17,HomeGoods LLC
+Sports Super Gadget 65,Sports,203,476.83,StyleInc
+Home & Kitchen Eco Widget 38,Home & Kitchen,38,181.51,FreshFarms
+Sports Ultra Device 27,Sports,30,153.4,StyleInc
+Grocery Basic Product 43,Grocery,75,125.65,HomeGoods LLC
+Grocery Smart Gadget 72,Grocery,165,375.82,TechCorp
+Sports Eco Widget 75,Sports,257,186.16,StyleInc
+Sports Super Tool 54,Sports,206,98.26,StyleInc
+Clothing Smart Product 57,Clothing,420,110.81,StyleInc
+Grocery Premium Item 15,Grocery,230,117.82,TechCorp
+Electronics Premium Kit 49,Electronics,268,278.42,TechCorp
+Sports Ultra Tool 31,Sports,424,321.11,StyleInc
+Sports Elite Product 36,Sports,439,72.83,HomeGoods LLC
+Grocery Basic Kit 47,Grocery,315,74.39,HomeGoods LLC
+Grocery Basic Kit 74,Grocery,16,190.69,FitGear
+Clothing Basic Product 15,Clothing,0,15.36,FitGear
+Grocery Super Tool 55,Grocery,471,403.96,FreshFarms
+Home & Kitchen Super Accessory 83,Home & Kitchen,21,340.06,FitGear
+Grocery Classic Tool 98,Grocery,34,14.1,FitGear
+Grocery Elite Kit 56,Grocery,278,414.08,TechCorp
+Electronics Smart Item 10,Electronics,30,206.23,HomeGoods LLC
+Home & Kitchen Smart Accessory 63,Home & Kitchen,144,361.93,TechCorp
+Sports Eco Widget 11,Sports,429,8.13,HomeGoods LLC
+Clothing Basic Pack 38,Clothing,487,219.92,HomeGoods LLC
+Home & Kitchen Max Kit 92,Home & Kitchen,36,38.92,HomeGoods LLC
+Electronics Eco Widget 95,Electronics,284,98.79,FitGear
+Clothing Elite Bundle 40,Clothing,202,378.67,HomeGoods LLC
+Grocery Premium Bundle 84,Grocery,173,405.47,FitGear
+Home & Kitchen Max Bundle 49,Home & Kitchen,392,482.86,FitGear
+Electronics Classic Widget 41,Electronics,117,376.08,HomeGoods LLC
+Clothing Ultra Kit 16,Clothing,45,463.23,TechCorp
+Grocery Max Widget 36,Grocery,72,73.84,HomeGoods LLC
+Clothing Classic Bundle 59,Clothing,313,414.88,FreshFarms
+Clothing Pro Accessory 31,Clothing,311,54.02,TechCorp
+Sports Max Device 79,Sports,39,161.62,FitGear
+Grocery Elite Item 55,Grocery,477,123.61,FitGear
+Grocery Smart Item 62,Grocery,178,175.1,FreshFarms
+Sports Elite Tool 40,Sports,345,207.46,FitGear
+Clothing Ultra Product 42,Clothing,259,146.41,StyleInc
+Clothing Elite Device 44,Clothing,300,466.34,HomeGoods LLC
+Grocery Classic Pack 46,Grocery,208,393.49,FitGear
+Home & Kitchen Elite Gadget 91,Home & Kitchen,127,493.61,HomeGoods LLC
+Electronics Eco Product 65,Electronics,107,51.16,FreshFarms
+Grocery Super Gadget 30,Grocery,464,24.98,FreshFarms
+Clothing Max Device 43,Clothing,140,388.83,StyleInc
+Sports Eco Product 39,Sports,22,387.26,FreshFarms
+Electronics Basic Bundle 79,Electronics,31,176.42,FitGear
+Clothing Classic Tool 73,Clothing,147,432.43,HomeGoods LLC
+Sports Eco Item 43,Sports,445,331.33,StyleInc
+Clothing Max Accessory 39,Clothing,297,424.43,TechCorp
+Sports Classic Kit 26,Sports,350,251.39,StyleInc
+Electronics Classic Bundle 18,Electronics,418,359.17,TechCorp
+Clothing Classic Bundle 77,Clothing,237,405.44,HomeGoods LLC
+Sports Premium Pack 64,Sports,406,333.84,HomeGoods LLC
+Grocery Super Tool 64,Grocery,81,238.11,FitGear
+Clothing Eco Device 53,Clothing,396,276.06,FreshFarms
+Clothing Eco Tool 39,Clothing,164,25.76,FreshFarms
+Home & Kitchen Pro Accessory 88,Home & Kitchen,308,274.51,FitGear
+Sports Premium Gadget 77,Sports,236,401.09,HomeGoods LLC
+Home & Kitchen Elite Accessory 81,Home & Kitchen,305,434.55,FitGear
+Sports Basic Gadget 25,Sports,235,86.34,HomeGoods LLC
+Clothing Classic Gadget 85,Clothing,348,411.58,StyleInc
+Home & Kitchen Basic Widget 98,Home & Kitchen,36,383.33,StyleInc
+Home & Kitchen Elite Gadget 84,Home & Kitchen,477,383.03,StyleInc
+Home & Kitchen Premium Gadget 38,Home & Kitchen,202,447.04,HomeGoods LLC
+Home & Kitchen Smart Accessory 19,Home & Kitchen,44,54.33,HomeGoods LLC
+Electronics Super Accessory 75,Electronics,16,240.91,FitGear
+Home & Kitchen Classic Bundle 60,Home & Kitchen,490,489.63,FitGear
+Home & Kitchen Ultra Widget 16,Home & Kitchen,204,395.59,StyleInc
+Clothing Premium Bundle 67,Clothing,187,435.61,FitGear
+Home & Kitchen Super Gadget 36,Home & Kitchen,37,195.5,FreshFarms
+Home & Kitchen Ultra Pack 74,Home & Kitchen,46,161.31,TechCorp
+Electronics Smart Widget 23,Electronics,410,149.95,HomeGoods LLC
+Grocery Premium Accessory 42,Grocery,303,225.06,FreshFarms
+Home & Kitchen Basic Product 18,Home & Kitchen,171,315.1,StyleInc
+Clothing Basic Bundle 80,Clothing,126,89.24,StyleInc
+Electronics Premium Product 47,Electronics,397,393.55,FreshFarms
+Grocery Classic Widget 55,Grocery,361,282.94,FitGear
+Electronics Ultra Item 67,Electronics,275,486.56,FreshFarms
+Sports Smart Accessory 58,Sports,245,435.54,HomeGoods LLC
+Home & Kitchen Super Kit 25,Home & Kitchen,410,14.52,HomeGoods LLC
+Home & Kitchen Ultra Product 93,Home & Kitchen,200,228.06,TechCorp
+Electronics Elite Pack 15,Electronics,339,55.84,TechCorp
+Electronics Basic Widget 91,Electronics,255,230.42,FitGear
+Home & Kitchen Smart Item 79,Home & Kitchen,11,134.71,FitGear
+Grocery Premium Bundle 37,Grocery,330,435.24,TechCorp
+Grocery Smart Product 75,Grocery,245,207.53,FreshFarms
+Sports Super Item 39,Sports,94,436.73,FreshFarms
+Electronics Eco Item 57,Electronics,383,262.91,FitGear
+Sports Premium Gadget 61,Sports,294,364.65,TechCorp
+Grocery Max Tool 61,Grocery,278,318.0,HomeGoods LLC
+Home & Kitchen Basic Gadget 35,Home & Kitchen,133,257.05,HomeGoods LLC
+Grocery Smart Accessory 37,Grocery,98,207.68,FreshFarms
+Grocery Super Widget 45,Grocery,310,173.44,FreshFarms
+Clothing Smart Bundle 79,Clothing,490,209.27,StyleInc
+Home & Kitchen Premium Item 32,Home & Kitchen,396,257.13,TechCorp
+Grocery Classic Item 21,Grocery,14,265.33,StyleInc
+Grocery Eco Bundle 54,Grocery,326,353.85,HomeGoods LLC
+Home & Kitchen Basic Gadget 23,Home & Kitchen,269,118.53,FitGear
+Grocery Eco Bundle 24,Grocery,303,34.07,FitGear
+Clothing Ultra Item 88,Clothing,277,456.89,FreshFarms
+Sports Classic Device 48,Sports,293,479.85,FitGear
+Clothing Max Gadget 77,Clothing,111,474.27,StyleInc
+Clothing Smart Gadget 33,Clothing,278,380.36,StyleInc
+Home & Kitchen Classic Pack 78,Home & Kitchen,44,9.31,TechCorp
+Grocery Eco Gadget 67,Grocery,376,468.49,TechCorp
+Clothing Pro Pack 96,Clothing,205,458.2,FitGear
+Clothing Ultra Widget 47,Clothing,21,135.69,FitGear
+Sports Premium Gadget 63,Sports,275,105.44,StyleInc
+Electronics Classic Pack 37,Electronics,313,139.01,HomeGoods LLC
+Electronics Classic Item 88,Electronics,488,82.4,StyleInc
+Home & Kitchen Pro Accessory 12,Home & Kitchen,29,348.38,FreshFarms
+Clothing Classic Tool 70,Clothing,391,454.05,FitGear

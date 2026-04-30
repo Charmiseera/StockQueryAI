@@ -10,10 +10,15 @@ All data access is routed through the MCP server via JSON-RPC.
 """
 
 import os
+import sys
 import json
 import asyncio
 import logging
 from pathlib import Path
+
+# Ensure backend/ is on the path so `import mcp_client` works
+# regardless of the working directory uvicorn is launched from.
+sys.path.insert(0, str(Path(__file__).parent))
 
 from openai import OpenAI
 from fastapi import FastAPI, HTTPException
@@ -108,7 +113,7 @@ SYSTEM_PROMPT = (
     "you MUST use 'get_inventory_analytics', 'get_category_analytics', or 'get_all_categories'. Do NOT say you lack details.\n"
     "2. OPTIONAL PARAMS: In tools like 'search_inventory', all parameters (min_price, max_price, etc.) are OPTIONAL. "
     "To show the most expensive items, just call 'search_inventory(sort_by=\"price_desc\")' and leave other fields null.\n"
-    "3. WRITE (Update Stock): To update stock, you MUST use 'update_stock'. If you don't have the ID, search for it FIRST.\n"
+    "3. WRITE (Update Stock): To update stock, use 'update_stock'. You can provide the 'product_name' directly without needing to search for its ID first.\n"
     "4. MULTI-STEP: You are encouraged to call multiple tools in sequence without stopping (e.g., Search -> Update -> Analytics).\n"
     "5. RESPONSES: Provide a natural-language summary. Never paste raw JSON. If a list is empty, say 'No products found'.\n"
     "6. NO HALLUCINATION: Only use results from your tools. Never guess IDs."
@@ -167,8 +172,12 @@ async def run_query(question: str) -> QueryResponse:
 
         # Route every tool call through MCPManager
         for tc in msg.tool_calls:
-            tool_used = tc.function.name
-            log.info(f"[LLM] Tool call requested: {tool_used}")
+            if tool_used is None:
+                tool_used = tc.function.name
+            elif tc.function.name not in tool_used:
+                tool_used += f", {tc.function.name}"
+                
+            log.info(f"[LLM] Tool call requested: {tc.function.name}")
 
             try:
                 args = json.loads(tc.function.arguments)
@@ -177,13 +186,17 @@ async def run_query(question: str) -> QueryResponse:
                 args = {}
 
             # Execute via manager
-            result = await mcp_manager.call_tool(tool_used, args)
+            result = await mcp_manager.call_tool(tc.function.name, args)
 
             # Persist list/dict results for the frontend table
             if isinstance(result, list) and result:
-                data_result = result
+                if data_result is None:
+                    data_result = []
+                data_result.extend(result)
             elif isinstance(result, dict) and result and "error" not in result:
-                data_result = [result]
+                if data_result is None:
+                    data_result = []
+                data_result.append(result)
 
             messages.append({
                 "role":         "tool",
