@@ -7,23 +7,15 @@ const NAV_ITEMS = [
   { id: 'history', label: 'History', icon: '◷' },
 ]
 
-const CATEGORY_QUERIES = {
-  'Fruits & Veg':  'Show me all Fruits & Vegetables',
-  'Dairy':         'Show me all Dairy products',
-  'Grains & Pulses':'Show me all Grains & Pulses',
-  'Seafood':       'Show me all Seafood',
-  'Beverages':     'Show me all Beverages',
-}
+const CATEGORIES = [
+  { id: 'fruits',   label: 'Fruits & Veg',   icon: '🍎', query: 'Can you show me all our fruits and vegetables?', color: '#39ff14' },
+  { id: 'dairy',    label: 'Dairy',          icon: '🥛', query: 'Show me all the dairy products we have.',       color: '#00ff88' },
+  { id: 'grains',   label: 'Grains & Pulses', icon: '🌾', query: 'What grains and pulses do we have in stock?',     color: '#ffd700' },
+  { id: 'seafood',  label: 'Seafood',        icon: '🐟', query: 'Can you list all the seafood products?',             color: '#00d4ff' },
+  { id: 'beverages',label: 'Beverages',      icon: '🥤', query: 'Show me all of our beverages.',           color: '#ff4488' },
+]
 
-const CATEGORY_COLORS = {
-  'Fruits & Veg':  '#39ff14',
-  'Dairy':         '#00ff88',
-  'Grains & Pulses':'#ffd700',
-  'Seafood':       '#00d4ff',
-  'Beverages':     '#ff4488',
-}
-
-export default function Sidebar({ activeNav, setActiveNav, onQuery, sidebarOpen, messageCount }) {
+export default function Sidebar({ activeNav, setActiveNav, onQuery, onUploadCSV, onLogout, sidebarOpen, messageCount }) {
   const [health, setHealth] = useState(null)
 
   useEffect(() => {
@@ -40,15 +32,15 @@ export default function Sidebar({ activeNav, setActiveNav, onQuery, sidebarOpen,
       {/* ── Brand ── */}
       <div className="sidebar-brand">
         <div className="brand-icon">
-          <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
-            <rect x="2" y="3" width="20" height="14" rx="1" stroke="#00ff88" strokeWidth="1.5"/>
-            <path d="M8 21h8M12 17v4" stroke="#00ff88" strokeWidth="1.5" strokeLinecap="round"/>
-            <path d="M6 7h4M6 10h8M6 13h6" stroke="#00ff88" strokeWidth="1.2" strokeLinecap="round"/>
+          <svg viewBox="0 0 24 24" fill="none" width="22" height="22">
+            <rect x="2" y="3" width="20" height="14" rx="2" stroke="#00ff88" strokeWidth="2"/>
+            <path d="M8 21h8M12 17v4" stroke="#00ff88" strokeWidth="2" strokeLinecap="round"/>
+            <path d="M6 7h4M6 10h8M6 13h6" stroke="#00ff88" strokeWidth="1.5" strokeLinecap="round"/>
           </svg>
         </div>
         <div>
           <div className="brand-name">StockQuery</div>
-          <div className="brand-tag">AI</div>
+          <div className="brand-tag">AI DASHBOARD</div>
         </div>
       </div>
 
@@ -69,31 +61,30 @@ export default function Sidebar({ activeNav, setActiveNav, onQuery, sidebarOpen,
         ))}
       </nav>
 
-      <div className="sidebar-divider" />
-
       {/* ── Categories ── */}
       <div className="sidebar-section">
         <div className="section-label">CATEGORIES</div>
         <div className="category-list">
-          {Object.entries(CATEGORY_QUERIES).map(([cat, query]) => (
+          {CATEGORIES.map((cat) => (
             <button
-              key={cat}
+              key={cat.id}
               className="cat-item"
-              onClick={() => onQuery(query)}
-              title={`Browse ${cat}`}
+              onClick={() => onQuery(cat.query)}
+              title={`Browse ${cat.label}`}
             >
-              <span
-                className="cat-dot"
-                style={{ background: CATEGORY_COLORS[cat] }}
-              />
-              <span className="cat-name">{cat}</span>
+              <div className="cat-icon-wrapper">
+                <span className="cat-mini-icon">{cat.icon}</span>
+                <span
+                  className="cat-dot-pulse"
+                  style={{ background: cat.color }}
+                />
+              </div>
+              <span className="cat-name">{cat.label}</span>
               <span className="cat-arrow">→</span>
             </button>
           ))}
         </div>
       </div>
-
-      <div className="sidebar-divider" />
 
       {/* ── Quick Queries ── */}
       <div className="sidebar-section">
@@ -107,9 +98,9 @@ export default function Sidebar({ activeNav, setActiveNav, onQuery, sidebarOpen,
             <span className="action-icon info">≡</span>
             All Categories
           </button>
-          <button className="action-btn" onClick={() => onQuery('Show me the most expensive products')}>
-            <span className="action-icon accent">↑</span>
-            Top Priced
+          <button className="action-btn" onClick={onUploadCSV}>
+            <span className="action-icon upload">📁</span>
+            Upload CSV
           </button>
         </div>
       </div>
@@ -119,13 +110,16 @@ export default function Sidebar({ activeNav, setActiveNav, onQuery, sidebarOpen,
         <div className="status-row">
           <span className={`status-indicator ${health ? 'online' : 'offline'}`} />
           <span className="status-text">
-            {health ? 'API Connected' : 'API Offline'}
+            {health ? 'SYSTEM ONLINE' : 'SYSTEM OFFLINE'}
           </span>
         </div>
         <div className="db-info">
           <span className="db-icon">◉</span>
-          inventory.db · 990 products
+          inventory.db · 990 units
         </div>
+        <button className="clear-btn" onClick={onLogout} style={{ marginTop: '16px', width: '100%' }}>
+          Logout
+        </button>
       </div>
     </aside>
   )

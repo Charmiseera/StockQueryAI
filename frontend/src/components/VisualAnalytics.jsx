@@ -19,7 +19,6 @@ import {
 export default function VisualAnalytics({ data, userQuery = '' }) {
   if (!data || data.length === 0) return null;
 
-  // 0. Detect Intent: Only show if user asked for a graph/chart/visual
   const q = userQuery.toLowerCase();
   const wantsVisual = q.includes('graph') || 
                       q.includes('chart') || 
@@ -30,16 +29,10 @@ export default function VisualAnalytics({ data, userQuery = '' }) {
 
   if (!wantsVisual) return null;
 
-  // 1. Detect if it's "Category Analytics" data
-  // (Expected fields: category, product_count, total_stock, avg_price)
   const isCategoryStats = data.some(item => 'category' in item && ('product_count' in item || 'total_stock' in item));
-
-  // 2. Detect if it's a list of Products
-  // (Expected fields: name, stock, price)
   const isProductList = data.some(item => 'name' in item && 'stock' in item);
 
-  // Neon Colors
-  const COLORS = ['#00f3ff', '#ff00ff', '#39ff14', '#ffea00', '#ff4d00'];
+  const COLORS = ['#00ff88', '#00d4ff', '#ffea00', '#ff4d00', '#ff00ff'];
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
@@ -47,7 +40,7 @@ export default function VisualAnalytics({ data, userQuery = '' }) {
         <div className="neon-tooltip">
           <p className="label">{`${label}`}</p>
           {payload.map((pld, index) => (
-            <p key={index} style={{ color: pld.fill }}>
+            <p key={index} style={{ color: pld.fill, fontSize: '12px', fontWeight: 'bold' }}>
               {`${pld.name}: ${pld.value}`}
             </p>
           ))}
@@ -59,53 +52,65 @@ export default function VisualAnalytics({ data, userQuery = '' }) {
 
   if (isCategoryStats) {
     return (
-      <div className="visual-analytics neon-border">
-        <h3 className="analytics-title">Category Breakdown</h3>
+      <div className="analytics-chart-wrapper">
+        <div className="chart-header">
+          <div>
+            <h3 className="chart-title">Category Insights</h3>
+            <span className="chart-subtitle">Distribution & Stock Levels</span>
+          </div>
+          <span className="chart-badge">LIVE DATA</span>
+        </div>
+        
         <div className="chart-grid">
-          {/* Stock Levels Bar Chart */}
           <div className="chart-item">
-            <h4 className="chart-subtitle">Stock per Category</h4>
-            <div style={{ width: '100%', height: 250 }}>
-              <ResponsiveContainer>
-                <BarChart data={data}>
-                  <XAxis dataKey="category" stroke="#888" fontSize={10} tickLine={false} axisLine={false} />
-                  <YAxis stroke="#888" fontSize={10} tickLine={false} axisLine={false} />
-                  <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }} />
-                  <Bar dataKey="total_stock" radius={[4, 4, 0, 0]}>
-                    {data.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} className="neon-bar" />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart data={data}>
+                <XAxis dataKey="category" hide />
+                <YAxis hide />
+                <Tooltip content={<CustomTooltip />} />
+                <Bar dataKey="total_stock" radius={[6, 6, 0, 0]}>
+                  {data.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+            <h4 className="chart-subtitle">Stock Volume</h4>
           </div>
 
-          {/* Product Count Pie Chart */}
           <div className="chart-item">
-            <h4 className="chart-subtitle">Product Distribution</h4>
-            <div style={{ width: '100%', height: 250 }}>
-              <ResponsiveContainer>
-                <PieChart>
-                  <Pie
-                    data={data}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
-                    paddingAngle={5}
-                    dataKey="product_count"
-                    nameKey="category"
-                  >
-                    {data.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip content={<CustomTooltip />} />
-                  <Legend iconType="circle" wrapperStyle={{ fontSize: '10px', paddingTop: '20px' }} />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
+            <ResponsiveContainer width="100%" height={220}>
+              <PieChart>
+                <Pie
+                  data={data}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={50}
+                  outerRadius={70}
+                  paddingAngle={8}
+                  dataKey="product_count"
+                  nameKey="category"
+                >
+                  {data.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip content={<CustomTooltip />} />
+              </PieChart>
+            </ResponsiveContainer>
+            <h4 className="chart-subtitle">Item Count</h4>
+          </div>
+        </div>
+
+        <div className="chart-footer">
+          <div className="footer-stat">
+            <span className="stat-label">Total Categories</span>
+            <span className="stat-value">{data.length}</span>
+          </div>
+          <div className="footer-divider" />
+          <div className="footer-stat">
+            <span className="stat-label">Analytics Mode</span>
+            <span className="stat-value">Semantic</span>
           </div>
         </div>
       </div>
@@ -113,23 +118,34 @@ export default function VisualAnalytics({ data, userQuery = '' }) {
   }
 
   if (isProductList && data.length > 2) {
-    // Only show chart for product lists if there are enough items to compare
     return (
-      <div className="visual-analytics neon-border">
-        <h3 className="analytics-title">Stock Comparison</h3>
-        <div style={{ width: '100%', height: 250 }}>
-          <ResponsiveContainer>
-            <BarChart data={data.slice(0, 8)}> {/* Show top 8 for readability */}
-              <XAxis dataKey="name" stroke="#888" fontSize={10} tickLine={false} axisLine={false} hide />
-              <YAxis stroke="#888" fontSize={10} tickLine={false} axisLine={false} />
-              <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }} />
-              <Bar dataKey="stock" radius={[4, 4, 0, 0]}>
-                {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
+      <div className="analytics-chart-wrapper">
+        <div className="chart-header">
+          <div>
+            <h3 className="chart-title">Product Stock Analysis</h3>
+            <span className="chart-subtitle">Comparing top {Math.min(8, data.length)} items</span>
+          </div>
+          <span className="chart-badge">METRICS</span>
+        </div>
+
+        <ResponsiveContainer width="100%" height={240}>
+          <BarChart data={data.slice(0, 8)}>
+            <XAxis dataKey="name" hide />
+            <YAxis hide />
+            <Tooltip content={<CustomTooltip />} />
+            <Bar dataKey="stock" radius={[8, 8, 0, 0]}>
+              {data.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+
+        <div className="chart-footer">
+          <div className="footer-stat">
+            <span className="stat-label">Sample Size</span>
+            <span className="stat-value">{data.length} items</span>
+          </div>
         </div>
       </div>
     );

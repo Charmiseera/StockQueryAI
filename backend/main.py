@@ -15,18 +15,23 @@ import json
 import asyncio
 import logging
 from pathlib import Path
+import sqlite3
 
 # Ensure backend/ is on the path so `import mcp_client` works
 # regardless of the working directory uvicorn is launched from.
 sys.path.insert(0, str(Path(__file__).parent))
 
 from openai import OpenAI
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from dotenv import load_dotenv
 import httpx
+from datetime import datetime, timedelta
+import jwt
+from passlib.context import CryptContext
 
 import mcp_client
 
@@ -48,6 +53,13 @@ NEBIUS_API_KEY   = os.getenv("NEBIUS_API_KEY", "")
 ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY", "")
 ELEVENLABS_VOICE_ID = os.getenv("ELEVENLABS_VOICE_ID", "")
 MODEL            = "meta-llama/Llama-3.3-70B-Instruct"
+
+SECRET_KEY = os.getenv("SECRET_KEY", "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7")
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7 # 7 days
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 if not NEBIUS_API_KEY or NEBIUS_API_KEY == "your-nebius-api-key-here":
     log.warning("NEBIUS_API_KEY not set. Add it to .env before querying.")
@@ -104,6 +116,26 @@ class QueryResponse(BaseModel):
     tool_used: str | None
     data: list | None
 
+class ProductIngest(BaseModel):
+    name: str
+    category: str
+    stock: int
+    price: float
+    supplier: str | None = "Unknown"
+
+class IngestRequest(BaseModel):
+    mode: str  # "append" or "replace"
+    products: list[ProductIngest]
+
+class UserCreate(BaseModel):
+    username: str
+    email: str
+    password: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
 
 SYSTEM_PROMPT = (
     "You are StockQuery AI, an intelligent inventory assistant. "
@@ -121,15 +153,23 @@ SYSTEM_PROMPT = (
 
 
 # ─── Agentic Loop ─────────────────────────────────────────────
-async def run_query(question: str) -> QueryResponse:
+async def run_query(question: str, current_user: dict) -> QueryResponse:
     """
     Full agentic loop using dynamic MCP tools.
     """
-    log.info(f"[LLM] New request: {question!r}")
+    log.info(f"[LLM] New request: {question!r} from user {current_user['id']}")
 
     client      = get_client()
+    
+    # Implicitly pass user_id so LLM doesn't have to worry about it
+    sys_prompt = SYSTEM_PROMPT + (
+        f"\n7. Important: Your tools implicitly filter by user_id. You do not need to provide it."
+        f"\n8. NEVER explain or echo a tool's description. If you need data, output a valid JSON tool call immediately."
+        f"\n9. If asked for items by category (e.g. 'fruits', 'vegetables', 'dairy'), you MUST use 'get_products_by_category' for EACH category name. Do not assume 'Fruits & Veg' is one category if they are separate in the database."
+    )
+    
     messages    = [
-        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "system", "content": sys_prompt},
         {"role": "user",   "content": question},
     ]
     tool_used   = None
@@ -185,6 +225,9 @@ async def run_query(question: str) -> QueryResponse:
                 log.error(f"[LLM] Failed to parse tool arguments: {e}")
                 args = {}
 
+            # Inject the current user's ID into the tool arguments
+            args["user_id"] = current_user["id"]
+
             # Execute via manager
             result = await mcp_manager.call_tool(tc.function.name, args)
 
@@ -212,14 +255,116 @@ async def run_query(question: str) -> QueryResponse:
     )
 
 
+# ─── Auth Helpers ──────────────────────────────────────────────
+def get_db_connection():
+    db_path = Path(__file__).parent.parent / "mcp_server" / "inventory.db"
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def init_db():
+    conn = get_db_connection()
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE NOT NULL,
+            email TEXT UNIQUE NOT NULL,
+            hashed_password TEXT NOT NULL
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+init_db()
+
+import bcrypt
+
+def verify_password(plain_password, hashed_password):
+    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
+
+def get_password_hash(password):
+    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+def create_access_token(data: dict, expires_delta: timedelta | None = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+    except jwt.PyJWTError:
+        raise credentials_exception
+        
+    conn = get_db_connection()
+    user = conn.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
+    conn.close()
+    
+    if user is None:
+        raise credentials_exception
+    return dict(user)
+
 # ─── Endpoints ───────────────────────────────────────────────
+@app.post("/register", status_code=status.HTTP_201_CREATED)
+async def register(user: UserCreate):
+    conn = get_db_connection()
+    existing_user = conn.execute("SELECT * FROM users WHERE username = ? OR email = ?", (user.username, user.email)).fetchone()
+    if existing_user:
+        conn.close()
+        raise HTTPException(status_code=400, detail="Username or email already registered")
+        
+    hashed_password = get_password_hash(user.password)
+    conn.execute(
+        "INSERT INTO users (username, email, hashed_password) VALUES (?, ?, ?)",
+        (user.username, user.email, hashed_password)
+    )
+    conn.commit()
+    conn.close()
+    return {"message": "User created successfully"}
+
+@app.post("/login", response_model=Token)
+async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    conn = get_db_connection()
+    user = conn.execute("SELECT * FROM users WHERE username = ? OR email = ?", (form_data.username, form_data.username)).fetchone()
+    conn.close()
+    
+    if not user or not verify_password(form_data.password, user["hashed_password"]):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+        
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": user["username"]}, expires_delta=access_token_expires
+    )
+    return {"access_token": access_token, "token_type": "bearer"}
+
+@app.get("/me")
+async def read_users_me(current_user: dict = Depends(get_current_user)):
+    return {"username": current_user["username"]}
+
 @app.get("/health")
 async def health_check():
     return {"status": "ok", "service": "StockQuery AI", "model": MODEL}
 
 
 @app.post("/query", response_model=QueryResponse)
-async def query_inventory(request: QueryRequest):
+async def query_inventory(request: QueryRequest, current_user: dict = Depends(get_current_user)):
     if not request.question.strip():
         raise HTTPException(status_code=400, detail="Question cannot be empty.")
 
@@ -230,7 +375,7 @@ async def query_inventory(request: QueryRequest):
         )
 
     try:
-        return await run_query(request.question.strip())
+        return await run_query(request.question.strip(), current_user)
     except Exception as e:
         err = str(e)
         log.error(f"[BACKEND] Query failed: {err}", exc_info=True)
@@ -268,3 +413,56 @@ async def generate_tts(request: TTSRequest):
                     yield chunk
 
     return StreamingResponse(audio_stream(), media_type="audio/mpeg")
+
+
+@app.post("/ingest")
+async def ingest_dataset(request: IngestRequest, current_user: dict = Depends(get_current_user)):
+    """
+    Ingest a dataset of products from the frontend.
+    Supports replacing the entire DB or appending to it.
+    """
+    try:
+        db_path = Path(__file__).parent.parent / "mcp_server" / "inventory.db"
+        conn = sqlite3.connect(db_path)
+        
+        # Ensure schema exists just in case
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS products (
+                id       INTEGER PRIMARY KEY AUTOINCREMENT,
+                name     TEXT    NOT NULL,
+                category TEXT    NOT NULL,
+                stock    INTEGER NOT NULL DEFAULT 0,
+                price    REAL    NOT NULL DEFAULT 0.0,
+                supplier TEXT    NOT NULL DEFAULT 'Unknown',
+                user_id  INTEGER NOT NULL DEFAULT 1
+            )
+        """)
+        
+        if request.mode == "replace":
+            log.info(f"[BACKEND] Replace mode requested. Clearing existing products for user {current_user['id']}.")
+            conn.execute("DELETE FROM products WHERE user_id = ?", (current_user["id"],))
+            
+        inserted = 0
+        for p in request.products:
+            # Check if name is non-empty
+            if not p.name.strip():
+                continue
+                
+            conn.execute(
+                "INSERT INTO products (name, category, stock, price, supplier, user_id) VALUES (?, ?, ?, ?, ?, ?)",
+                (p.name[:200], p.category[:100], p.stock, round(p.price, 2), p.supplier[:100] if p.supplier else "Unknown", current_user["id"])
+            )
+            inserted += 1
+            
+        conn.commit()
+        conn.close()
+        log.info(f"[BACKEND] Successfully ingested {inserted} products (mode: {request.mode}).")
+        return {"status": "ok", "message": f"Successfully ingested {inserted} products.", "inserted": inserted}
+    except Exception as e:
+        log.error(f"[BACKEND] Ingestion failed: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+    except Exception as e:
+        log.error(f"[BACKEND] Ingestion failed: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+

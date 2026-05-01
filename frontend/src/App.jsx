@@ -1,8 +1,11 @@
-// App.jsx — StockQuery AI v2.0 — Terminal Command Center Design
+// App.jsx — StockQuery AI v3.0 — Premium Dashboard
 import { useState, useRef, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import MessageBubble from './components/MessageBubble'
 import Sidebar from './components/Sidebar'
+import CsvUploadModal from './components/CsvUploadModal'
+import Login from './components/Login'
+import Register from './components/Register'
 
 const SAMPLE_QUESTIONS = [
   'Which products are low in stock?',
@@ -15,17 +18,40 @@ const SAMPLE_QUESTIONS = [
   'What items need restocking?',
 ]
 
-const TypingIndicator = () => (
-  <div className="msg ai">
-    <div className="msg-avatar">AI</div>
-    <div className="msg-body">
-      <div className="typing">
-        <span /><span /><span />
-        <span className="typing-label">Querying inventory...</span>
+const UniqueLoader = () => {
+  const [iconIndex, setIconIndex] = useState(0)
+  const icons = ['🍎', '🥦', '🥕', '🥛', '🐟', '🥤', '🌾']
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIconIndex((prev) => (prev + 1) % icons.length)
+    }, 400)
+    return () => clearInterval(interval)
+  }, [])
+
+  return (
+    <div className="msg ai loader-msg">
+      <div className="msg-avatar">AI</div>
+      <div className="msg-body">
+        <div className="scanner-container">
+          <div className="scanner-ui">
+            <div className="scanner-line" />
+            <div className="scanner-icon-wrap">
+              <span className="scanner-icon">{icons[iconIndex]}</span>
+            </div>
+          </div>
+          <div className="scanner-content">
+            <div className="scanner-label">SCANNING INVENTORY...</div>
+            <div className="scanner-subtext">Searching database for relevant stock records</div>
+            <div className="scanner-progress-track">
+              <div className="scanner-progress-fill" />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-)
+  )
+}
 
 const SendIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
@@ -51,8 +77,40 @@ export default function App() {
   const [activeNav, setActiveNav] = useState('chat')
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [isListening, setIsListening] = useState(false)
+  const [isCsvModalOpen, setIsCsvModalOpen] = useState(false)
+  const [token, setToken] = useState(localStorage.getItem('token') || null)
+  const [authMode, setAuthMode] = useState('login')
   const chatRef  = useRef(null)
   const inputRef = useRef(null)
+
+  useEffect(() => {
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    } else {
+      delete axios.defaults.headers.common['Authorization']
+    }
+  }, [token])
+
+  const handleLogin = (newToken) => {
+    localStorage.setItem('token', newToken)
+    setToken(newToken)
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    setToken(null)
+    setMessages([])
+  }
+
+  useEffect(() => {
+    if (token) {
+      axios.get('/me').catch((err) => {
+        if (err.response?.status === 401) {
+          handleLogout()
+        }
+      })
+    }
+  }, [token])
 
   const playTTS = async (text) => {
     try {
@@ -119,7 +177,7 @@ export default function App() {
         content: data.answer,
         toolUsed: data.tool_used,
         data: data.data,
-        userQuery: question, // Store original question to detect intent
+        userQuery: question,
         timestamp: new Date(),
       }])
       if (wasVoice === true) {
@@ -134,6 +192,9 @@ export default function App() {
         timestamp: new Date(),
         error: true,
       }])
+      if (err.response?.status === 401) {
+        handleLogout()
+      }
     } finally {
       setLoading(false)
       setTimeout(() => inputRef.current?.focus(), 50)
@@ -149,22 +210,29 @@ export default function App() {
 
   const hasMessages = messages.length > 0
 
+  if (!token) {
+    if (authMode === 'login') {
+      return <Login onLogin={handleLogin} onSwitchToRegister={() => setAuthMode('register')} />
+    } else {
+      return <Register onRegister={handleLogin} onSwitchToLogin={() => setAuthMode('login')} />
+    }
+  }
+
   return (
     <div className="app-shell">
 
-      {/* ── Sidebar ── */}
       <Sidebar
         activeNav={activeNav}
         setActiveNav={setActiveNav}
         onQuery={sendMessage}
+        onUploadCSV={() => setIsCsvModalOpen(true)}
+        onLogout={handleLogout}
         sidebarOpen={sidebarOpen}
         messageCount={messages.length}
       />
 
-      {/* ── Main Panel ── */}
       <div className="main-panel">
 
-        {/* ── Top Bar ── */}
         <header className="topbar">
           <div className="topbar-left">
             <button
@@ -175,17 +243,17 @@ export default function App() {
               <span /><span /><span />
             </button>
             <div className="topbar-breadcrumb">
-              <span className="breadcrumb-root">StockQuery</span>
+              <span className="breadcrumb-root">StockQuery AI</span>
               <span className="breadcrumb-sep">/</span>
               <span className="breadcrumb-current">
-                {activeNav === 'chat' ? 'Chat' : activeNav === 'explore' ? 'Explore' : 'History'}
+                {activeNav === 'chat' ? 'Assistant' : activeNav === 'explore' ? 'Analytics' : 'History'}
               </span>
             </div>
           </div>
           <div className="topbar-right">
             <div className="model-badge">
               <span className="status-dot" />
-              Llama-3.3-70B · Nebius
+              LLAMA-3.3-70B
             </div>
             {hasMessages && (
               <button className="clear-btn" onClick={() => setMessages([])}>
@@ -197,28 +265,28 @@ export default function App() {
 
         <main className="chat-area" ref={chatRef}>
           {activeNav === 'history' ? (
-            <div className="history-view" style={{ padding: '2rem' }}>
-              <h2 style={{ color: '#fff', marginBottom: '1rem', borderBottom: '1px solid #333', paddingBottom: '0.5rem' }}>Session History</h2>
+            <div className="history-view">
+              <div className="welcome-header">
+                <div className="welcome-tag">SESSION LOGS</div>
+                <h2 className="welcome-title">Your Recent Queries</h2>
+              </div>
+              
               {messages.filter(m => m.role === 'user').length === 0 ? (
-                <p style={{ color: '#888' }}>No queries have been made in this session yet.</p>
+                <div className="welcome-desc" style={{ marginTop: '2rem' }}>No queries have been made in this session yet.</div>
               ) : (
-                <ul style={{ listStyle: 'none', padding: 0 }}>
+                <div className="category-list" style={{ marginTop: '2rem', maxWidth: '600px', marginInline: 'auto' }}>
                   {messages.filter(m => m.role === 'user').map(m => (
-                    <li 
+                    <button 
                       key={m.id} 
-                      className="history-item"
-                      style={{ padding: '1rem', borderBottom: '1px solid #222', color: '#00ff88', cursor: 'pointer', transition: 'background 0.2s' }} 
+                      className="nav-item"
                       onClick={() => { setActiveNav('chat'); setInput(m.content); setTimeout(() => inputRef.current?.focus(), 50); }}
-                      onMouseOver={(e) => e.currentTarget.style.background = '#111'}
-                      onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
                     >
-                      <span style={{ fontSize: '1.1rem' }}>{m.content}</span>
-                      <span style={{ color: '#666', fontSize: '0.85rem', marginLeft: '15px', float: 'right' }}>
-                        {new Date(m.timestamp).toLocaleTimeString()}
-                      </span>
-                    </li>
+                      <span className="nav-icon">💬</span>
+                      <span className="nav-label">{m.content}</span>
+                      <span className="nav-badge">{new Date(m.timestamp).toLocaleTimeString()}</span>
+                    </button>
                   ))}
-                </ul>
+                </div>
               )}
             </div>
           ) : !hasMessages ? (
@@ -226,13 +294,20 @@ export default function App() {
               <div className="welcome-header">
                 <div className="welcome-tag">INVENTORY INTELLIGENCE</div>
                 <h1 className="welcome-title">
-                  Ask your inventory<br />
-                  <span className="welcome-accent">anything.</span>
+                  Ask your inventory anything.
                 </h1>
                 <p className="welcome-desc">
                   Natural language queries powered by Llama-3.3-70B.
                   Real-time SQLite data. Zero SQL required.
                 </p>
+                <div style={{ marginTop: '24px' }}>
+                  <button 
+                    className="primary-btn" 
+                    onClick={() => setIsCsvModalOpen(true)}
+                  >
+                    📁 Upload Inventory CSV
+                  </button>
+                </div>
               </div>
 
               <div className="quick-grid">
@@ -244,27 +319,10 @@ export default function App() {
                     disabled={loading}
                     style={{ animationDelay: `${i * 0.05}s` }}
                   >
-                    <span className="quick-arrow">→</span>
                     {q}
+                    <span className="quick-arrow">→</span>
                   </button>
                 ))}
-              </div>
-
-              <div className="welcome-stats">
-                <div className="wstat">
-                  <span className="wstat-num">990</span>
-                  <span className="wstat-label">Products</span>
-                </div>
-                <div className="wstat-div" />
-                <div className="wstat">
-                  <span className="wstat-num">7</span>
-                  <span className="wstat-label">Categories</span>
-                </div>
-                <div className="wstat-div" />
-                <div className="wstat">
-                  <span className="wstat-num">5</span>
-                  <span className="wstat-label">AI Tools</span>
-                </div>
               </div>
             </div>
           ) : (
@@ -272,12 +330,11 @@ export default function App() {
               {messages.map((msg) => (
                 <MessageBubble key={msg.id} message={msg} />
               ))}
-              {loading && <TypingIndicator />}
+              {loading && <UniqueLoader />}
             </>
           )}
         </main>
 
-        {/* ── Input Dock ── */}
         <footer className="input-dock">
           <div className="input-wrap">
             <textarea
@@ -286,12 +343,11 @@ export default function App() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Ask about stock levels, prices, categories..."
+              placeholder="Query stock, prices, or categories..."
               rows={1}
               disabled={loading}
             />
             <div className="input-actions">
-              <span className="input-hint-key">↵ Enter</span>
               <button
                 className={`mic-btn ${isListening ? 'listening' : ''}`}
                 onClick={startListening}
@@ -304,24 +360,32 @@ export default function App() {
                 className="send-btn"
                 onClick={() => sendMessage()}
                 disabled={loading || !input.trim()}
-                title="Send (Enter)"
+                title="Send"
               >
                 {loading ? (
-                  <span className="send-spinner" />
+                  <div className="send-spinner" />
                 ) : (
                   <SendIcon />
                 )}
               </button>
             </div>
           </div>
-          <div className="dock-footer">
-            <span>Shift+Enter for new line</span>
-            <span className="dock-dot">·</span>
-            <span>Connected to <code>inventory.db</code></span>
-          </div>
         </footer>
 
       </div>
+      <CsvUploadModal 
+        isOpen={isCsvModalOpen} 
+        onClose={() => setIsCsvModalOpen(false)} 
+        onUploadSuccess={(insertedCount) => {
+          setMessages(prev => [...prev, {
+            id: Date.now(),
+            role: 'ai',
+            content: `Successfully ingested ${insertedCount} products. You can now query your dataset!`,
+            timestamp: new Date(),
+          }])
+        }}
+      />
     </div>
   )
 }
+
