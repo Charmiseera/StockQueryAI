@@ -1,6 +1,10 @@
 // App.jsx — StockQuery AI v3.0 — Premium Dashboard
 import { useState, useRef, useEffect, useCallback } from 'react'
 import axios from 'axios'
+
+// Set backend URL for production (Vercel -> Render)
+axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+
 import MessageBubble from './components/MessageBubble'
 import Sidebar from './components/Sidebar'
 import CsvUploadModal from './components/CsvUploadModal'
