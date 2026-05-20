@@ -1,0 +1,56 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: stockquery_pg
+    environment:
+      POSTGRES_USER: stockquery
+      POSTGRES_PASSWORD: stockpassword
+      POSTGRES_DB: stockquery_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: stockquery-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      # Override ALLOWED_ORIGINS for Docker networking
+      ALLOWED_ORIGINS: "http://localhost,http://localhost:80,http://frontend"
+    volumes:
+      # Persist the SQLite database outside the container
+      - ./mcp_server/inventory.db:/app/mcp_server/inventory.db
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/health').raise_for_status()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      args:
+        VITE_API_URL: http://backend:8000
+    container_name: stockquery-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  db_data:
+  pgdata:
