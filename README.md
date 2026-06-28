@@ -304,15 +304,46 @@ StockQueryAI/
 
 ---
 
-## ☁️ Deploy to Railway
+## ☁️ Deployment — Vercel (Frontend) + Render (Backend)
 
-1. Fork this repo on GitHub
-2. Create a new project on [railway.app](https://railway.app)
-3. Add a **PostgreSQL** plugin to your project
-4. Create a backend service → point to `Dockerfile.backend`
-5. Create a frontend service → point to `Dockerfile.frontend`
-6. Set environment variables from `.env.example`
-7. Update `ALLOWED_ORIGINS` to your Railway frontend URL
+### Step 1 — Deploy Backend on Render
+
+1. Go to [render.com](https://render.com) → **New** → **Blueprint**
+2. Connect your GitHub repo — Render will detect `render.yaml` automatically
+3. It creates:
+   - A **PostgreSQL** database (`stockquery-db`)
+   - A **Web Service** (`stockquery-backend`) using `Dockerfile.backend`
+4. In the backend service → **Environment** → add manually:
+   ```
+   GROQ_API_KEY=your_key
+   NEBIUS_API_KEY=your_key
+   ELEVENLABS_API_KEY=your_key      # optional
+   ALLOWED_ORIGINS=https://your-app.vercel.app
+   ```
+5. Copy your Render backend URL: `https://stockquery-backend.onrender.com`
+
+### Step 2 — Deploy Frontend on Vercel
+
+1. Go to [vercel.com](https://vercel.com) → **New Project** → Import your GitHub repo
+2. Set **Root Directory** to `frontend`
+3. Vercel auto-detects Vite. Build settings should be:
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+4. Add **Environment Variable**:
+   ```
+   VITE_API_URL=https://stockquery-backend.onrender.com
+   ```
+5. Click **Deploy** → your app is live at `https://your-app.vercel.app`
+
+### Step 3 — Update CORS
+
+Go back to Render → backend service → **Environment** → update:
+```
+ALLOWED_ORIGINS=https://your-app.vercel.app
+```
+Render will redeploy automatically.
+
+> **Note:** Render free tier spins down after 15 min of inactivity. First request after idle takes ~30s to wake up.
 
 ---
 

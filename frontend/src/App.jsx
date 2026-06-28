@@ -12,6 +12,13 @@ import Analytics from './components/Analytics'
 import Settings from './components/Settings'
 import ProductManager from './components/ProductManager'
 
+// In Vercel: VITE_API_URL = https://your-backend.onrender.com
+// In Docker:  VITE_API_URL is empty — Nginx proxy handles routing via relative URLs
+const API_BASE = import.meta.env.VITE_API_URL || ''
+if (API_BASE) {
+  axios.defaults.baseURL = API_BASE
+}
+
 const savedToken = localStorage.getItem('sq_token')
 if (savedToken) {
   axios.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`
