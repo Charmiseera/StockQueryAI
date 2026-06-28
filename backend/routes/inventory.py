@@ -5,11 +5,12 @@ Handles CSV ingestion (/ingest) and dashboard stats (/stats).
 All operations are user_id scoped — no cross-user data leakage.
 """
 
-import sqlite3
-import logging
 from typing import Annotated, Optional
-
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form
+from fastapi.responses import StreamingResponse
+import io
+import logging
+import json
 from pydantic import BaseModel, field_validator
 
 from auth.dependencies import CurrentUser
@@ -18,6 +19,7 @@ from db.connection import get_db
 from sqlalchemy.orm import Session
 from sqlalchemy import func, distinct, or_
 from db.models import Product, StockAuditLog
+from utils.import_parser import parse_file_rows, resolve_column_headers, validate_row, detect_dataset_type
 
 log = logging.getLogger(__name__)
 router = APIRouter(prefix="/inventory", tags=["inventory"])
@@ -117,6 +119,215 @@ async def ingest_dataset(
     }
 
 
+@router.get("/sample-csv")
+async def download_sample_csv():
+    """Return a template CSV format for importing products."""
+    csv_content = (
+        "Product Name,Category,Stock Quantity,Price,Supplier\n"
+        "Basmati Rice 1kg,Grains,50,120.00,AgroSupply Co.\n"
+        "Whole Milk 1L,Dairy,20,55.00,FreshFarm Ltd.\n"
+        "USB-C Hub 7-Port,Electronics,10,1499.00,TechZone India\n"
+    )
+    return StreamingResponse(
+        io.StringIO(csv_content),
+        media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=stockquery_sample.csv"}
+    )
+
+
+@router.post("/preview")
+async def preview_import(
+    current_user: CurrentUser,
+    file: UploadFile = File(...),
+):
+    """
+    Parse uploaded file (CSV or XLSX) and return headers,
+    resolved mappings, raw preview rows (max 20), validation warnings,
+    and dataset classification with confidence scoring.
+    """
+    # Verify file extension
+    filename = file.filename or "file.csv"
+    ext = filename.lower().split(".")[-1]
+    if ext not in ("csv", "xlsx"):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Unsupported file format. Please upload a .csv or .xlsx file."
+        )
+
+    try:
+        content_bytes = await file.read()
+        headers, raw_rows = parse_file_rows(content_bytes, filename)
+    except Exception as parse_err:
+        log.error(f"[IMPORT] File parsing failed for {filename}: {parse_err}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Failed to parse file: {str(parse_err)}"
+        )
+
+    column_mappings = resolve_column_headers(headers)
+    dataset_type, confidence = detect_dataset_type(headers, column_mappings)
+    preview_rows = raw_rows[:20]
+
+    # Validate preview rows to flag early warnings
+    validation_errors = []
+    for idx, row in enumerate(preview_rows):
+        _, err = validate_row(row, column_mappings, idx + 1)
+        if err:
+            validation_errors.append(err)
+
+    return {
+        "headers": headers,
+        "preview_rows": preview_rows,
+        "column_mappings": column_mappings,
+        "validation_errors": validation_errors,
+        "total_rows": len(raw_rows),
+        "dataset_type": dataset_type,
+        "confidence": confidence
+    }
+
+
+@router.post("/import")
+async def execute_import(
+    current_user: CurrentUser,
+    db: Annotated[Session, Depends(get_db)],
+    file: UploadFile = File(...),
+    strategy: str = Form("skip"),
+    mappings: str = Form("{}"),
+):
+    """
+    Import inventory rows from CSV/XLSX into PostgreSQL database.
+    Supported strategies: skip, update, replace_all.
+    """
+    # 1. Parse and validate parameters
+    try:
+        mappings_dict = json.loads(mappings)
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Mappings must be a valid JSON string."
+        )
+
+    if not mappings_dict.get("name"):
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Mapping for 'name' is mandatory."
+        )
+
+    if strategy not in ("skip", "update", "replace_all"):
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Invalid duplicate strategy. Supported: 'skip', 'update', 'replace_all'."
+        )
+
+    # 2. Parse file
+    filename = file.filename or "file.csv"
+    try:
+        content_bytes = await file.read()
+        headers, raw_rows = parse_file_rows(content_bytes, filename)
+    except Exception as parse_err:
+        log.error(f"[IMPORT] File parsing failed during import for {filename}: {parse_err}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Failed to parse file: {str(parse_err)}"
+        )
+
+    # Detect dataset type to apply appropriate loading defaults
+    resolved_headers_map = resolve_column_headers(headers)
+    # Use resolved mapping merged with user's overrides to classify
+    effective_mappings = {**resolved_headers_map, **mappings_dict}
+    dataset_type, confidence = detect_dataset_type(headers, effective_mappings)
+
+    user_id = current_user["id"]
+
+    # 3. Apply replace_all strategy by dropping existing records first
+    if strategy == "replace_all":
+        log.info(f"[IMPORT] replace_all strategy triggered: clearing current inventory for user_id={user_id}")
+        db.query(Product).filter(Product.user_id == user_id).delete()
+        db.commit()
+
+    # 4. Fetch existing database entries to evaluate conflicts
+    existing_products = db.query(Product).filter(Product.user_id == user_id).all()
+    existing_map = {p.name.lower().strip(): p for p in existing_products}
+
+    # 5. Process all rows & validate
+    valid_prods = []
+    failed_rows = []
+    failed_count = 0
+
+    for idx, row in enumerate(raw_rows):
+        val_prod, err = validate_row(row, mappings_dict, idx + 1)
+        if err:
+            if len(failed_rows) < 5:
+                log.warning(f"[IMPORT] Row {idx + 1} validation failed. Errors: {err.get('errors')}. Row: {row}")
+            failed_rows.append(err)
+            failed_count += 1
+            continue
+
+        # If it is classified as a transaction log or catalog, override stock value to 0
+        if dataset_type in ("transaction", "catalog"):
+            val_prod["stock"] = 0
+
+        valid_prods.append(val_prod)
+
+    # 6. De-duplicate product names case-insensitively for catalogs/transactions
+    if dataset_type in ("transaction", "catalog"):
+        seen_names = {}
+        for vp in valid_prods:
+            name_key = vp["name"].lower().strip()
+            if name_key not in seen_names:
+                seen_names[name_key] = vp
+        valid_prods = list(seen_names.values())
+
+    inserted_count = 0
+    updated_count = 0
+    skipped_count = 0
+
+    # 7. Write unique records to database
+    for val_prod in valid_prods:
+        name_key = val_prod["name"].lower().strip()
+        
+        if name_key in existing_map:
+            if strategy == "skip":
+                skipped_count += 1
+            elif strategy == "update":
+                p = existing_map[name_key]
+                p.stock = val_prod["stock"]
+                p.price = val_prod["price"]
+                p.category = val_prod["category"]
+                p.supplier = val_prod["supplier"]
+                updated_count += 1
+        else:
+            # Create new product record
+            new_p = Product(
+                user_id=user_id,
+                name=val_prod["name"],
+                category=val_prod["category"],
+                stock=val_prod["stock"],
+                price=val_prod["price"],
+                supplier=val_prod["supplier"]
+            )
+            db.add(new_p)
+            # Cache locally to handle duplicate entries within the list
+            existing_map[name_key] = new_p
+            inserted_count += 1
+
+    db.commit()
+    log.info(f"[IMPORT] Scoped user_id={user_id} processed {len(raw_rows)} rows. Result: {inserted_count} inserted, {updated_count} updated, {skipped_count} skipped.")
+
+    return {
+        "status": "success",
+        "dataset_type": dataset_type,
+        "total_rows": len(raw_rows),
+        "unique_products": len(valid_prods),
+        "inserted": inserted_count,
+        "updated": updated_count,
+        "skipped": skipped_count,
+        "failed": failed_count,
+        "failed_rows": failed_rows
+    }
+
+
+
 @router.get("/stats")
 async def get_inventory_stats(
     current_user: CurrentUser,
@@ -147,11 +358,11 @@ async def get_user_categories(
     db: Annotated[Session, Depends(get_db)],
 ):
     """
-    Return distinct categories for the current user.
+    Return distinct categories for the current user as a flat list of strings.
     """
     user_id = current_user["id"]
     rows = db.query(Product.category).distinct().filter(Product.user_id == user_id).order_by(Product.category).all()
-    return {"categories": [r[0] for r in rows]}
+    return [r[0] for r in rows if r[0]]
 
 
 # ── Product CRUD ───────────────────────────────────────────────────────────────

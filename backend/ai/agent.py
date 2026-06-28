@@ -18,12 +18,24 @@ from mcp_bridge.client_manager import mcp_manager
 
 log = logging.getLogger(__name__)
 
+GROQ_API_KEY: str = os.environ.get("GROQ_API_KEY", "")
 NEBIUS_API_KEY: str = os.environ.get("NEBIUS_API_KEY", "")
 NEBIUS_BASE_URL: str = os.environ.get("NEBIUS_BASE_URL", "https://api.studio.nebius.com/v1/")
-MODEL: str = os.environ.get("LLM_MODEL", "meta-llama/Llama-3.3-70B-Instruct")
+
+if GROQ_API_KEY:
+    PROVIDER = "groq"
+    API_KEY = GROQ_API_KEY
+    BASE_URL = "https://api.groq.com/openai/v1"
+    MODEL = os.environ.get("LLM_MODEL", "llama-3.3-70b-versatile")
+else:
+    PROVIDER = "nebius"
+    API_KEY = NEBIUS_API_KEY
+    BASE_URL = NEBIUS_BASE_URL
+    MODEL = os.environ.get("LLM_MODEL", "meta-llama/Llama-3.3-70B-Instruct")
+
 MAX_TURNS: int = int(os.environ.get("LLM_MAX_TURNS", "10"))
 
-SYSTEM_PROMPT = """You are StockQuery AI, an intelligent inventory assistant with read and write access to a real database.
+SYSTEM_PROMPT = """You are StockQuery AI, an intelligent inventory assistant with read and write access to a real PostgreSQL database.
 
 RULES (follow strictly):
 1. ANALYTICS & CHARTS: For graphs, charts, breakdowns, or category lists → use `get_inventory_analytics`, `get_category_analytics`, or `get_all_categories`.
@@ -33,7 +45,6 @@ RULES (follow strictly):
 5. RESPONSES: Summarize results in natural language. Never paste raw JSON. If empty, say "No products found".
 6. NO HALLUCINATION: Only use data from tool results. Never invent values.
 7. USER ISOLATION: Every tool automatically filters to the current user's data. You do not need to provide user_id.
-8. AUTO-CATEGORIZATION: If asked to categorize items, use `get_uncategorized_products` to fetch a batch, invent sensible retail categories, and apply them using `bulk_update_categories`.
 """
 
 
@@ -44,9 +55,9 @@ class QueryResponse(BaseModel):
 
 
 def _get_openai_client() -> OpenAI:
-    if not NEBIUS_API_KEY:
-        raise ValueError("NEBIUS_API_KEY is not configured.")
-    return OpenAI(base_url=NEBIUS_BASE_URL, api_key=NEBIUS_API_KEY)
+    if not API_KEY:
+        raise ValueError("Neither GROQ_API_KEY nor NEBIUS_API_KEY is configured.")
+    return OpenAI(base_url=BASE_URL, api_key=API_KEY)
 
 
 async def run_query(question: str, current_user: dict) -> QueryResponse:
@@ -93,9 +104,22 @@ async def run_query(question: str, current_user: dict) -> QueryResponse:
                 data=data_result,
             )
 
-        # Append assistant message
-        msg_dict = msg.model_dump()
-        msg_dict.setdefault("content", "")
+        # Append assistant message (clean schema for strict APIs like Groq)
+        msg_dict = {
+            "role": "assistant",
+            "content": msg.content or "",
+        }
+        if msg.tool_calls:
+            msg_dict["tool_calls"] = [
+                {
+                    "id": tc.id,
+                    "type": tc.type,
+                    "function": {
+                        "name": tc.function.name,
+                        "arguments": tc.function.arguments,
+                    }
+                } for tc in msg.tool_calls
+            ]
         messages.append(msg_dict)
 
         # Execute each tool call — inject user_id for tenant isolation

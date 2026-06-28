@@ -5,7 +5,6 @@ Stores user queries and AI responses in the DB so they survive
 page refreshes and browser restarts.
 """
 
-import sqlite3
 import logging
 from typing import Annotated, Optional
 
@@ -86,9 +85,13 @@ async def save_message(
     db.flush() # Flush to get new ID before subquery
 
     # Prune oldest rows if over the per-user cap
-    subq = db.query(ChatHistory.id).filter(
-        ChatHistory.user_id == user_id
-    ).order_by(ChatHistory.id.desc()).limit(STORE_LIMIT).subquery()
+    from sqlalchemy import select
+    subq = (
+        select(ChatHistory.id)
+        .filter(ChatHistory.user_id == user_id)
+        .order_by(ChatHistory.id.desc())
+        .limit(STORE_LIMIT)
+    )
     
     db.query(ChatHistory).filter(
         ChatHistory.user_id == user_id,

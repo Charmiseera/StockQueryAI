@@ -13,6 +13,7 @@ async def get_me(current_user: CurrentUser):
     """Return basic profile info for the authenticated user."""
     return {
         "id": current_user["id"],
-        "username": current_user["username"],
+        "full_name": current_user["full_name"],
         "email": current_user["email"],
+        "business_name": current_user["business_name"],
     }

@@ -67,16 +67,16 @@ def validate_password_strength(password: str) -> None:
 
 # ── JWT ──────────────────────────────────────────────────────────────────────
 
-def create_access_token(user_id: int, username: str) -> str:
+def create_access_token(user_id: int, email: str) -> str:
     """
     Create a signed JWT for the given user.
-    Sub is the user_id (integer string) — not the username — to avoid
-    leaking usernames and to keep tokens stable across username changes.
+    Sub is the user_id (integer string) — not the email — to avoid
+    leaking email addresses in token claims where possible.
     """
     expires_at = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     payload = {
         "sub": str(user_id),
-        "username": username,
+        "email": email,
         "exp": expires_at,
         "iat": datetime.now(timezone.utc),
     }

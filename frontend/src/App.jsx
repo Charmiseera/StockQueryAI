@@ -1,17 +1,28 @@
-// App.jsx — StockQuery AI v2.0 — Terminal Command Center Design
+// App.jsx — StockQuery AI v4.0 — Premium SaaS Redesign
 import { useState, useRef, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import MessageBubble from './components/MessageBubble'
 import Sidebar from './components/Sidebar'
+import Login from './components/Login'
+import Register from './components/Register'
+import ImportInventory from './components/ImportInventory'
+import Dashboard from './components/Dashboard'
+import Landing from './components/Landing'
+import Analytics from './components/Analytics'
+import Settings from './components/Settings'
+import ProductManager from './components/ProductManager'
+
+const savedToken = localStorage.getItem('sq_token')
+if (savedToken) {
+  axios.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`
+}
 
 const SAMPLE_QUESTIONS = [
   'Which products are low in stock?',
-  'Show me all Dairy products',
+  'List all products',
   'What categories do you have?',
-  'Show me all Electronics',
   'What is the price of Basmati Rice?',
-  'Which snacks are available?',
-  'List products under ₹100',
+  'List products under 100',
   'What items need restocking?',
 ]
 
@@ -45,14 +56,106 @@ const MicIcon = () => (
 )
 
 export default function App() {
+  const [token, setToken] = useState(localStorage.getItem('sq_token') || null)
+  const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('sq_user')) || null)
+  const [authState, setAuthState] = useState(localStorage.getItem('sq_token') ? 'authenticated' : 'landing')
+
   const [messages, setMessages]   = useState([])
   const [input, setInput]         = useState('')
   const [loading, setLoading]     = useState(false)
-  const [activeNav, setActiveNav] = useState('chat')
+  const [activeNav, setActiveNav] = useState('dashboard')
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [isListening, setIsListening] = useState(false)
+  const [modelInfo, setModelInfo] = useState('Llama-3.3-70B · Nebius')
+  const [categoryRefreshKey, setCategoryRefreshKey] = useState(0)
+  const triggerCategoryRefresh = () => setCategoryRefreshKey(prev => prev + 1)
   const chatRef  = useRef(null)
   const inputRef = useRef(null)
+
+  // Axios response interceptor to handle 401 token expiration
+  // IMPORTANT: skip auth endpoints — a wrong password returns 401 and should
+  // NOT trigger a logout loop. Only force-logout on protected endpoint 401s.
+  useEffect(() => {
+    const AUTH_PATHS = ['/auth/login', '/auth/register']
+    const interceptor = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        const url = error.config?.url || ''
+        const isAuthRequest = AUTH_PATHS.some(p => url.includes(p))
+        if (error.response?.status === 401 && !isAuthRequest) {
+          handleLogout()
+        }
+        return Promise.reject(error)
+      }
+    );
+    return () => {
+      axios.interceptors.response.eject(interceptor)
+    }
+  }, [])
+
+  // Fetch dynamic model info from health endpoint
+  useEffect(() => {
+    axios.get('/health')
+      .then(res => {
+        if (res.data && res.data.provider) {
+          const providerName = res.data.provider.charAt(0).toUpperCase() + res.data.provider.slice(1);
+          let modelName = 'Llama-3.3-70B';
+          if (res.data.model && res.data.model.toLowerCase().includes('versatile')) {
+            modelName = 'Llama-3.3-70B';
+          }
+          setModelInfo(`${modelName} · ${providerName}`);
+        }
+      })
+      .catch(() => {});
+  }, [authState])
+
+  // Automatically fetch chat history on authenticated mount/login
+  useEffect(() => {
+    if (authState === 'authenticated') {
+      axios.get('/history')
+        .then(res => {
+          if (res.data && res.data.messages) {
+            // Map saved message list to UI messages state
+            const mapped = res.data.messages.map(m => ({
+              id: m.id,
+              role: m.role,
+              content: m.content,
+              toolUsed: m.tool_used,
+              timestamp: new Date(m.created_at || Date.now())
+            }))
+            setMessages(mapped)
+          }
+        })
+        .catch(err => console.error("Failed to retrieve chat history:", err))
+    } else {
+      setMessages([])
+    }
+  }, [authState])
+
+  const handleAuthSuccess = (newToken, user, rememberMe) => {
+    localStorage.setItem('sq_token', newToken)
+    localStorage.setItem('sq_user', JSON.stringify(user))
+    axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`
+    setToken(newToken)
+    setCurrentUser(user)
+    setAuthState('authenticated')
+    setActiveNav('dashboard')
+  }
+
+  const handleLogout = async () => {
+    try {
+      // Best effort API logout call
+      await axios.post('/auth/logout')
+    } catch (e) {
+      // Ignore network errors on logout
+    }
+    localStorage.removeItem('sq_token')
+    localStorage.removeItem('sq_user')
+    delete axios.defaults.headers.common['Authorization']
+    setToken(null)
+    setCurrentUser(null)
+    setAuthState('landing')
+  }
 
   const playTTS = async (text) => {
     try {
@@ -149,6 +252,18 @@ export default function App() {
 
   const hasMessages = messages.length > 0
 
+  if (authState === 'landing') {
+    return <Landing onLogin={() => setAuthState('login')} onRegister={() => setAuthState('register')} />
+  }
+
+  if (authState === 'login') {
+    return <Login onAuthSuccess={handleAuthSuccess} onNavigateToRegister={() => setAuthState('register')} />
+  }
+
+  if (authState === 'register') {
+    return <Register onRegisterSuccess={() => setAuthState('login')} onNavigateToLogin={() => setAuthState('login')} />
+  }
+
   return (
     <div className="app-shell">
 
@@ -159,6 +274,9 @@ export default function App() {
         onQuery={sendMessage}
         sidebarOpen={sidebarOpen}
         messageCount={messages.length}
+        currentUser={currentUser}
+        onLogout={handleLogout}
+        refreshKey={categoryRefreshKey}
       />
 
       {/* ── Main Panel ── */}
@@ -178,14 +296,21 @@ export default function App() {
               <span className="breadcrumb-root">StockQuery</span>
               <span className="breadcrumb-sep">/</span>
               <span className="breadcrumb-current">
-                {activeNav === 'chat' ? 'Chat' : activeNav === 'explore' ? 'Explore' : 'History'}
+                {activeNav === 'dashboard' ? 'Dashboard'
+                  : activeNav === 'inventory' ? 'Inventory'
+                  : activeNav === 'import' ? 'Import Inventory'
+                  : activeNav === 'chat' ? 'AI Assistant'
+                  : activeNav === 'analytics' ? 'Analytics'
+                  : activeNav === 'history' ? 'History'
+                  : activeNav === 'settings' ? 'Settings'
+                  : 'Dashboard'}
               </span>
             </div>
           </div>
           <div className="topbar-right">
             <div className="model-badge">
               <span className="status-dot" />
-              Llama-3.3-70B · Nebius
+              {modelInfo}
             </div>
             {hasMessages && (
               <button className="clear-btn" onClick={() => setMessages([])}>
@@ -196,32 +321,44 @@ export default function App() {
         </header>
 
         <main className="chat-area" ref={chatRef}>
-          {activeNav === 'history' ? (
-            <div className="history-view" style={{ padding: '2rem' }}>
-              <h2 style={{ color: '#fff', marginBottom: '1rem', borderBottom: '1px solid #333', paddingBottom: '0.5rem' }}>Session History</h2>
+          {activeNav === 'dashboard' ? (
+            <Dashboard
+              onNavigate={setActiveNav}
+              onQuery={(q) => { setActiveNav('chat'); setTimeout(() => sendMessage(q), 50) }}
+            />
+          ) : activeNav === 'import' ? (
+            <ImportInventory onImportSuccess={triggerCategoryRefresh} />
+          ) : activeNav === 'inventory' ? (
+            <ProductManager onStatsRefresh={triggerCategoryRefresh} />
+          ) : activeNav === 'analytics' ? (
+            <Analytics />
+          ) : activeNav === 'settings' ? (
+            <Settings currentUser={currentUser} onLogout={handleLogout} />
+          ) : activeNav === 'history' ? (
+            <div className="page-wrap">
+              <div className="dash-header"><div><h1 className="dash-title">History</h1><p className="dash-sub">Session query log</p></div></div>
               {messages.filter(m => m.role === 'user').length === 0 ? (
-                <p style={{ color: '#888' }}>No queries have been made in this session yet.</p>
+                <div className="dash-empty">
+                  <div className="dash-empty-icon">⏱</div>
+                  <h2 className="dash-empty-title">No history yet</h2>
+                  <p className="dash-empty-sub">Your AI queries will appear here.</p>
+                </div>
               ) : (
                 <ul style={{ listStyle: 'none', padding: 0 }}>
                   {messages.filter(m => m.role === 'user').map(m => (
-                    <li 
-                      key={m.id} 
+                    <li
+                      key={m.id}
                       className="history-item"
-                      style={{ padding: '1rem', borderBottom: '1px solid #222', color: '#00ff88', cursor: 'pointer', transition: 'background 0.2s' }} 
-                      onClick={() => { setActiveNav('chat'); setInput(m.content); setTimeout(() => inputRef.current?.focus(), 50); }}
-                      onMouseOver={(e) => e.currentTarget.style.background = '#111'}
-                      onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                      onClick={() => { setActiveNav('chat'); setInput(m.content); setTimeout(() => inputRef.current?.focus(), 50) }}
                     >
-                      <span style={{ fontSize: '1.1rem' }}>{m.content}</span>
-                      <span style={{ color: '#666', fontSize: '0.85rem', marginLeft: '15px', float: 'right' }}>
-                        {new Date(m.timestamp).toLocaleTimeString()}
-                      </span>
+                      <span className="history-q">{m.content}</span>
+                      <span className="history-time">{new Date(m.timestamp).toLocaleTimeString()}</span>
                     </li>
                   ))}
                 </ul>
               )}
             </div>
-          ) : !hasMessages ? (
+          ) : activeNav === 'chat' && !hasMessages ? (
             <div className="welcome">
               <div className="welcome-header">
                 <div className="welcome-tag">INVENTORY INTELLIGENCE</div>
@@ -231,10 +368,9 @@ export default function App() {
                 </h1>
                 <p className="welcome-desc">
                   Natural language queries powered by Llama-3.3-70B.
-                  Real-time SQLite data. Zero SQL required.
+                  Real-time PostgreSQL data. Zero SQL required.
                 </p>
               </div>
-
               <div className="quick-grid">
                 {SAMPLE_QUESTIONS.map((q, i) => (
                   <button
@@ -249,77 +385,62 @@ export default function App() {
                   </button>
                 ))}
               </div>
-
-              <div className="welcome-stats">
-                <div className="wstat">
-                  <span className="wstat-num">990</span>
-                  <span className="wstat-label">Products</span>
-                </div>
-                <div className="wstat-div" />
-                <div className="wstat">
-                  <span className="wstat-num">7</span>
-                  <span className="wstat-label">Categories</span>
-                </div>
-                <div className="wstat-div" />
-                <div className="wstat">
-                  <span className="wstat-num">5</span>
-                  <span className="wstat-label">AI Tools</span>
-                </div>
-              </div>
             </div>
-          ) : (
+          ) : activeNav === 'chat' ? (
             <>
               {messages.map((msg) => (
                 <MessageBubble key={msg.id} message={msg} />
               ))}
               {loading && <TypingIndicator />}
             </>
-          )}
+          ) : null}
         </main>
 
         {/* ── Input Dock ── */}
-        <footer className="input-dock">
-          <div className="input-wrap">
-            <textarea
-              ref={inputRef}
-              className="chat-input"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Ask about stock levels, prices, categories..."
-              rows={1}
-              disabled={loading}
-            />
-            <div className="input-actions">
-              <span className="input-hint-key">↵ Enter</span>
-              <button
-                className={`mic-btn ${isListening ? 'listening' : ''}`}
-                onClick={startListening}
-                disabled={loading || isListening}
-                title="Voice Input"
-              >
-                {isListening ? <span className="mic-spinner" /> : <MicIcon />}
-              </button>
-              <button
-                className="send-btn"
-                onClick={() => sendMessage()}
-                disabled={loading || !input.trim()}
-                title="Send (Enter)"
-              >
-                {loading ? (
-                  <span className="send-spinner" />
-                ) : (
-                  <SendIcon />
-                )}
-              </button>
+        {activeNav === 'chat' && (
+          <footer className="input-dock">
+            <div className="input-wrap">
+              <textarea
+                ref={inputRef}
+                className="chat-input"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Ask about stock levels, prices, categories..."
+                rows={1}
+                disabled={loading}
+              />
+              <div className="input-actions">
+                <span className="input-hint-key">↵ Enter</span>
+                <button
+                  className={`mic-btn ${isListening ? 'listening' : ''}`}
+                  onClick={startListening}
+                  disabled={loading || isListening}
+                  title="Voice Input"
+                >
+                  {isListening ? <span className="mic-spinner" /> : <MicIcon />}
+                </button>
+                <button
+                  className="send-btn"
+                  onClick={() => sendMessage()}
+                  disabled={loading || !input.trim()}
+                  title="Send (Enter)"
+                >
+                  {loading ? (
+                    <span className="send-spinner" />
+                  ) : (
+                    <SendIcon />
+                  )}
+                </button>
+              </div>
             </div>
-          </div>
-          <div className="dock-footer">
-            <span>Shift+Enter for new line</span>
-            <span className="dock-dot">·</span>
-            <span>Connected to <code>inventory.db</code></span>
-          </div>
-        </footer>
+            <div className="dock-footer">
+              <span>Shift+Enter for new line</span>
+              <span className="dock-dot">·</span>
+              <span>Connected to <code>PostgreSQL</code></span>
+            </div>
+          </footer>
+        )}
 
       </div>
     </div>

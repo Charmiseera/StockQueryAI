@@ -137,7 +137,7 @@ export default function ProductManager({ onStatsRefresh }) {
   const fetchCategories = useCallback(async () => {
     try {
       const { data } = await axios.get('/inventory/categories')
-      setCategories(data.categories || [])
+      setCategories(data || [])
     } catch { /* silent */ }
   }, [])
 

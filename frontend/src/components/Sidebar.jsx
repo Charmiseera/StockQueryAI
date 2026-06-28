@@ -1,43 +1,45 @@
-// Sidebar.jsx — Navigation panel with stats and quick-access categories
+// Sidebar.jsx — StockQuery AI · Premium Navigation Panel
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
 const NAV_ITEMS = [
-  { id: 'chat',    label: 'Chat',    icon: '◈' },
-  { id: 'history', label: 'History', icon: '◷' },
+  { id: 'dashboard', label: 'Dashboard',        icon: '⊞' },
+  { id: 'inventory', label: 'Inventory',        icon: '📦' },
+  { id: 'import',    label: 'Import Inventory', icon: '⬆' },
+  { id: 'chat',      label: 'AI Assistant',     icon: '◈' },
+  { id: 'analytics', label: 'Analytics',        icon: '📊' },
+  { id: 'history',   label: 'History',          icon: '⏱' },
+  { id: 'settings',  label: 'Settings',         icon: '⚙' },
 ]
 
-const CATEGORY_QUERIES = {
-  'Fruits & Veg':  'Show me all Fruits & Vegetables',
-  'Dairy':         'Show me all Dairy products',
-  'Grains & Pulses':'Show me all Grains & Pulses',
-  'Seafood':       'Show me all Seafood',
-  'Beverages':     'Show me all Beverages',
-}
+const PREMIUM_COLORS = ['#39ff14', '#00ff88', '#ffd700', '#00d4ff', '#ff4488', '#ff7700', '#9b5de5', '#f15bb5', '#00f5d4']
 
-const CATEGORY_COLORS = {
-  'Fruits & Veg':  '#39ff14',
-  'Dairy':         '#00ff88',
-  'Grains & Pulses':'#ffd700',
-  'Seafood':       '#00d4ff',
-  'Beverages':     '#ff4488',
-}
+export default function Sidebar({ activeNav, setActiveNav, onQuery, sidebarOpen, messageCount, currentUser, onLogout, refreshKey }) {
+  const [categories, setCategories] = useState([])
 
-export default function Sidebar({ activeNav, setActiveNav, onQuery, sidebarOpen, messageCount }) {
-  const [health, setHealth] = useState(null)
+  const fetchCategories = () => {
+    if (!currentUser) return
+    axios.get('/inventory/categories')
+      .then(res => {
+        const raw = res.data
+        const list = Array.isArray(raw)
+          ? raw
+          : Array.isArray(raw?.categories)
+            ? raw.categories
+            : []
+        setCategories(list)
+      })
+      .catch(() => setCategories([]))
+  }
 
-  useEffect(() => {
-    axios.get('/health')
-      .then(r => setHealth(r.data))
-      .catch(() => setHealth(null))
-  }, [])
+  useEffect(() => { fetchCategories() }, [currentUser, refreshKey])
 
   if (!sidebarOpen) return null
 
   return (
     <aside className="sidebar">
 
-      {/* ── Brand ── */}
+      {/* ── Brand ─────────────────────────────────────────────── */}
       <div className="sidebar-brand">
         <div className="brand-icon">
           <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
@@ -52,7 +54,7 @@ export default function Sidebar({ activeNav, setActiveNav, onQuery, sidebarOpen,
         </div>
       </div>
 
-      {/* ── Nav ── */}
+      {/* ── Primary Nav ───────────────────────────────────────── */}
       <nav className="sidebar-nav">
         {NAV_ITEMS.map(item => (
           <button
@@ -69,63 +71,52 @@ export default function Sidebar({ activeNav, setActiveNav, onQuery, sidebarOpen,
         ))}
       </nav>
 
+      {/* ── Divider ───────────────────────────────────────────── */}
       <div className="sidebar-divider" />
 
-      {/* ── Categories ── */}
+      {/* ── Categories ────────────────────────────────────────── */}
       <div className="sidebar-section">
         <div className="section-label">CATEGORIES</div>
         <div className="category-list">
-          {Object.entries(CATEGORY_QUERIES).map(([cat, query]) => (
-            <button
-              key={cat}
-              className="cat-item"
-              onClick={() => onQuery(query)}
-              title={`Browse ${cat}`}
-            >
-              <span
-                className="cat-dot"
-                style={{ background: CATEGORY_COLORS[cat] }}
-              />
-              <span className="cat-name">{cat}</span>
-              <span className="cat-arrow">→</span>
+          {categories.length === 0 ? (
+            <div className="sidebar-empty-cats">
+              No categories yet.<br />
+              Import inventory to get started.
+            </div>
+          ) : (
+            categories.slice(0, 8).map((cat, idx) => (
+              <button
+                key={cat}
+                className="cat-item"
+                onClick={() => onQuery(`Show me all products in the ${cat} category`)}
+              >
+                <span className="cat-dot" style={{ background: PREMIUM_COLORS[idx % PREMIUM_COLORS.length] }} />
+                <span className="cat-name">{cat}</span>
+              </button>
+            ))
+          )}
+        </div>
+      </div>
+
+      {/* ── Spacer + Logout ───────────────────────────────────── */}
+      <div className="sidebar-bottom">
+        {currentUser && (
+          <>
+            <div className="sidebar-user">
+              <div className="user-avatar">
+                {(currentUser.username || currentUser.email || 'U')[0].toUpperCase()}
+              </div>
+              <div className="user-info">
+                <div className="user-name">{currentUser.username || currentUser.email}</div>
+                <div className="user-role">Free Plan</div>
+              </div>
+            </div>
+            <button className="nav-item logout-item" onClick={onLogout}>
+              <span className="nav-icon">⎋</span>
+              <span className="nav-label">Logout</span>
             </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="sidebar-divider" />
-
-      {/* ── Quick Queries ── */}
-      <div className="sidebar-section">
-        <div className="section-label">QUICK ACTIONS</div>
-        <div className="quick-actions">
-          <button className="action-btn" onClick={() => onQuery('Which products are low in stock?')}>
-            <span className="action-icon warning">!</span>
-            Low Stock Alert
-          </button>
-          <button className="action-btn" onClick={() => onQuery('Please show me a list of all product categories available in the database')}>
-            <span className="action-icon info">≡</span>
-            All Categories
-          </button>
-          <button className="action-btn" onClick={() => onQuery('Show me the most expensive products')}>
-            <span className="action-icon accent">↑</span>
-            Top Priced
-          </button>
-        </div>
-      </div>
-
-      {/* ── Status Footer ── */}
-      <div className="sidebar-footer">
-        <div className="status-row">
-          <span className={`status-indicator ${health ? 'online' : 'offline'}`} />
-          <span className="status-text">
-            {health ? 'API Connected' : 'API Offline'}
-          </span>
-        </div>
-        <div className="db-info">
-          <span className="db-icon">◉</span>
-          inventory.db · 990 products
-        </div>
+          </>
+        )}
       </div>
     </aside>
   )

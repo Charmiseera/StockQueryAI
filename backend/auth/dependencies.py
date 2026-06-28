@@ -53,8 +53,9 @@ def get_current_user(
 
     return {
         "id": user.id,
-        "username": user.username,
+        "full_name": user.full_name,
         "email": user.email,
+        "business_name": user.business_name,
         "is_active": user.is_active
     }
 

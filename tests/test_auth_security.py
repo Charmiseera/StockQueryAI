@@ -58,13 +58,13 @@ class TestPasswordStrength:
 
 class TestJWT:
     def test_create_and_decode_token(self):
-        token = create_access_token(user_id=42, username="alice")
+        token = create_access_token(user_id=42, email="alice@test.com")
         payload = decode_access_token(token)
         assert payload["sub"] == "42"
-        assert payload["username"] == "alice"
+        assert payload["email"] == "alice@test.com"
 
     def test_tampered_token_raises(self):
-        token = create_access_token(user_id=1, username="bob")
+        token = create_access_token(user_id=1, email="bob@test.com")
         tampered = token[:-5] + "XXXXX"
         with pytest.raises(HTTPException) as exc_info:
             decode_access_token(tampered)
@@ -72,7 +72,7 @@ class TestJWT:
 
     def test_expired_token_raises(self):
         from datetime import datetime, timezone, timedelta
-        payload = {"sub": "1", "username": "test", "exp": datetime.now(timezone.utc) - timedelta(seconds=1)}
+        payload = {"sub": "1", "email": "test@test.com", "exp": datetime.now(timezone.utc) - timedelta(seconds=1)}
         expired_token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
         with pytest.raises(HTTPException) as exc_info:
             decode_access_token(expired_token)
